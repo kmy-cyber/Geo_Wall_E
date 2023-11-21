@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "d:\\PROGRAMACION\\3ER PROYECTO\\Backend\\Backend.csproj": {}
+    "D:\\PROGRAMACION\\3ER PROYECTO\\Geo_Wall_E\\Backend\\Backend.csproj": {}
   },
   "projects": {
-    "d:\\PROGRAMACION\\3ER PROYECTO\\Backend\\Backend.csproj": {
+    "D:\\PROGRAMACION\\3ER PROYECTO\\Geo_Wall_E\\Backend\\Backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "d:\\PROGRAMACION\\3ER PROYECTO\\Backend\\Backend.csproj",
+        "projectUniqueName": "D:\\PROGRAMACION\\3ER PROYECTO\\Geo_Wall_E\\Backend\\Backend.csproj",
         "projectName": "Backend",
-        "projectPath": "d:\\PROGRAMACION\\3ER PROYECTO\\Backend\\Backend.csproj",
+        "projectPath": "D:\\PROGRAMACION\\3ER PROYECTO\\Geo_Wall_E\\Backend\\Backend.csproj",
         "packagesPath": "C:\\Users\\Cami\\.nuget\\packages\\",
-        "outputPath": "d:\\PROGRAMACION\\3ER PROYECTO\\Backend\\obj\\",
+        "outputPath": "D:\\PROGRAMACION\\3ER PROYECTO\\Geo_Wall_E\\Backend\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

@@ -1,0 +1,11 @@
+D:\PROGRAMACION\3ER PROYECTO\Geo_Wall_E\Backend\obj\Debug\net7.0\Backend.GeneratedMSBuildEditorConfig.editorconfig
+D:\PROGRAMACION\3ER PROYECTO\Geo_Wall_E\Backend\obj\Debug\net7.0\Backend.AssemblyInfoInputs.cache
+D:\PROGRAMACION\3ER PROYECTO\Geo_Wall_E\Backend\obj\Debug\net7.0\Backend.AssemblyInfo.cs
+D:\PROGRAMACION\3ER PROYECTO\Geo_Wall_E\Backend\obj\Debug\net7.0\Backend.csproj.CoreCompileInputs.cache
+D:\PROGRAMACION\3ER PROYECTO\Geo_Wall_E\Backend\bin\Debug\net7.0\Backend.deps.json
+D:\PROGRAMACION\3ER PROYECTO\Geo_Wall_E\Backend\bin\Debug\net7.0\Backend.dll
+D:\PROGRAMACION\3ER PROYECTO\Geo_Wall_E\Backend\bin\Debug\net7.0\Backend.pdb
+D:\PROGRAMACION\3ER PROYECTO\Geo_Wall_E\Backend\obj\Debug\net7.0\Backend.dll
+D:\PROGRAMACION\3ER PROYECTO\Geo_Wall_E\Backend\obj\Debug\net7.0\refint\Backend.dll
+D:\PROGRAMACION\3ER PROYECTO\Geo_Wall_E\Backend\obj\Debug\net7.0\Backend.pdb
+D:\PROGRAMACION\3ER PROYECTO\Geo_Wall_E\Backend\obj\Debug\net7.0\ref\Backend.dll

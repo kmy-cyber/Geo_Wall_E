@@ -130,9 +130,8 @@ namespace INTERPRETE_C__to_HULK
         public Node Conditional()
         {
             position++;
-            Expect(TokenType.L_PHARENTESYS,"(");
             Node condition = Layer_6();
-            Expect(TokenType.R_PHARENTESYS,")");
+            Expect(TokenType.THEN,"then");
             Node operations_if = Global_Layer();
             Expect(TokenType.ELSE,"else");
             Node operations_else = Global_Layer();
@@ -310,6 +309,18 @@ namespace INTERPRETE_C__to_HULK
 
                 }
                 
+                else if(TS[position].Type == TokenType.CIRCLE)//recibe dos variables
+                {
+                    Node name = new Node{Type = "g_name", Value = TS[position-2].Value.ToString()};
+                    Expect(TokenType.L_PHARENTESYS,"(");
+                    Node point = Factor();
+                    Expect(TokenType.COMMA,",");
+                    Node measure = Factor();
+                    Expect(TokenType.R_PHARENTESYS,")");
+                    return new Node{ Type = "circle", Children = new List<Node>{name, point, measure} };
+
+                }
+
                 else if(TS[position].Type == TokenType.ARC)//recibe tres variables
                 {
                     Node name = new Node{Type = "g_name", Value = TS[position-2].Value.ToString()};
@@ -319,8 +330,10 @@ namespace INTERPRETE_C__to_HULK
                     Node var2 = Factor();
                     Expect(TokenType.COMMA,",");
                     Node var3 = Factor();
+                    Expect(TokenType.COMMA,",");
+                    Node var4 = Factor();
                     Expect(TokenType.R_PHARENTESYS,")");
-                    return new Node{ Type = "line", Children = new List<Node>{name, var1,var2,var3} };
+                    return new Node{ Type = "arc", Children = new List<Node>{name, var1, var2, var3, var4} };
 
                 }
 
@@ -475,6 +488,51 @@ namespace INTERPRETE_C__to_HULK
                     return new Node {Type = "point", Children = new List<Node>{name,x,y}};
                 }
 
+                else if(TS[position].Type == TokenType.LINE)
+                {
+                    position++;
+                    Node name = Factor();
+                    Expect(TokenType.VARIABLE, TS[position].Value);
+                   
+                    return new Node {Type = "line_d", Children = new List<Node>{name}};
+                }
+
+                else if(TS[position].Type == TokenType.SEGMENT)
+                {
+                    position++;
+                    Node name = Factor();
+                    Expect(TokenType.VARIABLE, TS[position].Value);
+                    
+                    return new Node {Type = "segment_d", Children = new List<Node>{name}};
+                }
+
+                else if(TS[position].Type == TokenType.RAY)
+                {
+                    position++;
+                    Node name = Factor();
+                    Expect(TokenType.VARIABLE, TS[position].Value);
+                    
+                    return new Node {Type = "ray_d", Children = new List<Node>{name}};
+                }
+
+                else if(TS[position].Type == TokenType.ARC)
+                {
+                    position++;
+                    Node name = Factor();
+                    Expect(TokenType.VARIABLE, TS[position].Value);
+                    
+                    return new Node {Type = "arc_d", Children = new List<Node>{name}};
+                }
+
+                else if(TS[position].Type == TokenType.CIRCLE)
+                {
+                    position++;
+                    Node name = Factor();
+                    Expect(TokenType.VARIABLE, TS[position].Value);
+                    
+                    return new Node {Type = "circle_d", Children = new List<Node>{name}};
+                }
+
                 // Si el token actual es nulo, retorna un nodo vacío
                 else if(TS[position] == null)
                 {
@@ -514,7 +572,7 @@ namespace INTERPRETE_C__to_HULK
                     {
                         string msg = $"Missing expression in `{op}` after variable `{TS[position-1].Value}`";
                         Input_Error(msg);
-                    } 
+                    }
                 }
             }
 

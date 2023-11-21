@@ -11,7 +11,7 @@ namespace INTERPRETE_C__to_HULK
 
 
             // Inicializa el diccionario de variables_globales
-            Semantic_Analyzer sa = new Semantic_Analyzer();
+            Semantic_Analyzer<double> sa = new Semantic_Analyzer<double>();
 //
             //List<string> input = new List<string>{
             ////    "function fib(n) => if (n > 1) fib(n-1) + fib(n-2) else 1;",

@@ -3,7 +3,7 @@ using System.Globalization;
 using Microsoft.VisualBasic.CompilerServices;
 namespace G_Wall_E
 {
-    public interface Figure
+    public interface IFigure
     {
     }
 
@@ -48,6 +48,8 @@ namespace G_Wall_E
         {
             Name = name;
             Color = color;
+            P1 = new Point<T>(name, color);
+            P2 = new Point<T>(name, color);
         }
 
         public Line(string name, string color, Point<T> p1, Point<T> p2)
@@ -71,6 +73,8 @@ namespace G_Wall_E
         {
             Name = name;
             Color = color;
+            P1 = new Point<T>(name, color);
+            P2 = new Point<T>(name, color);
         }
 
         public Segment(string name, string color, Point<T> p1, Point<T> p2)
@@ -94,6 +98,8 @@ namespace G_Wall_E
         {
             Name = name;
             Color = color;
+            P1 = new Point<T>(name, color);
+            P2 = new Point<T>(name, color);
         }
 
         public Ray(string name, string color, Point<T> p1, Point<T> p2)
@@ -117,6 +123,8 @@ namespace G_Wall_E
         {
             Name = name;
             Color = color;
+            P1 = new Point<T>(name, color);
+            Radius = new Measure<T>();
         }
 
         public Circle(string name, string color, Point<T> p1, Measure<T> radius)
@@ -142,6 +150,10 @@ namespace G_Wall_E
         {
             Color = color;
             Name = name;
+            P1 = new Point<T>(name, color);
+            P2 = new Point<T>(name, color);
+            P3 = new Point<T>(name, color);
+            Distance = new Measure<T>();
         } 
 
         public Arc(string color, string name, Point<T> p1, Point<T> p2, Point<T> p3, Measure<T> distance)

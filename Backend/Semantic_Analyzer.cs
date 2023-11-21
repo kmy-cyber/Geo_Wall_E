@@ -1,4 +1,3 @@
-
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
@@ -11,13 +10,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
 using INTERPRETE_C_to_HULK;
+using G_Wall_E;
 
 namespace INTERPRETE_C__to_HULK
 {
-    public class Semantic_Analyzer
+    public class Semantic_Analyzer<T> where T : IComparable<T>
     {
         Node AST; // Árbol de Análisis Sintáctico Abstracto (AST)
+
+        string FigureColor; // Color actual para las figuras
 
         Dictionary<string,object> variables_globales; // Diccionario para almacenar las variables globales
         
@@ -38,7 +41,8 @@ namespace INTERPRETE_C__to_HULK
                 {"true",true},
                 {"false",false},
             };
-             
+            
+            FigureColor = "black";
         }
 
         /// <summary>
@@ -263,6 +267,86 @@ namespace INTERPRETE_C__to_HULK
                     dynamic ?result = Evaluate(node.Children[1]);
                     Scopes.Remove(Scopes[Scopes.Count-1]);
                     return result;
+                
+                //* GEO_WALL_E
+
+                case "point":
+                    string name_p = node.Children[0].Value.ToString();
+                    Point<T> point = new Point<T>(name_p, FigureColor);
+                    Scopes[Scopes.Count - 1].Add(name_p, point);
+                    return point;
+                
+                case "line_d":
+                    string name_ld = node.Children[0].Value.ToString();
+                    Line<T> line = new Line<T>(name_ld, FigureColor);
+                    Scopes[Scopes.Count - 1].Add(name_ld, line);
+                    return line;
+                
+                case "segment_d":
+                    string name_sd = node.Children[0].Value.ToString();
+                    Segment<T> segment = new Segment<T>(name_sd, FigureColor);
+                    Scopes[Scopes.Count - 1].Add(name_sd, segment);
+                    return segment;
+                
+                case "ray_d":
+                    string name_rd = node.Children[0].Value.ToString();
+                    Ray<T> ray = new Ray<T>(name_rd, FigureColor);
+                    Scopes[Scopes.Count - 1].Add(name_rd, ray);
+                    return ray;
+                
+                case "arc_d":
+                    string name_ad = node.Children[0].Value.ToString();
+                    Arc<T> arc = new Arc<T>(name_ad, FigureColor);
+                    Scopes[Scopes.Count - 1].Add(name_ad, arc);
+                    return arc;
+                
+                case "circle_d":
+                    string name_cd = node.Children[0].Value.ToString();
+                    Circle<T> circle = new Circle<T>(name_cd, FigureColor);
+                    Scopes[Scopes.Count - 1].Add(name_cd, circle);
+                    return circle;
+                
+                case "line":
+                    string name_l = node.Children[0].Value.ToString();
+                    object? p1_l = Evaluate(node.Children[1]);
+                    object? p2_l = Evaluate(node.Children[2]);
+                    Line<T> line1 = new Line<T>(name_l, FigureColor, (Point<T>)p1_l, (Point<T>)p2_l);
+                    Scopes[Scopes.Count - 1].Add(name_l, line1);
+                    return line1;
+                
+                case "segment":
+                    string name_s = node.Children[0].Value.ToString();
+                    object? p1_s = Evaluate(node.Children[1]);
+                    object? p2_s = Evaluate(node.Children[2]);
+                    Segment<T> segment1 = new Segment<T>(name_s, FigureColor, (Point<T>)p1_s, (Point<T>)p2_s);
+                    Scopes[Scopes.Count - 1].Add(name_s, segment1);
+                    return segment1;
+                
+                case "ray":
+                    string name_r = node.Children[0].Value.ToString();
+                    object? p1_r = Evaluate(node.Children[1]);
+                    object? p2_r = Evaluate(node.Children[2]);
+                    Ray<T> ray1 = new Ray<T>(name_r, FigureColor, (Point<T>)p1_r, (Point<T>)p2_r);
+                    Scopes[Scopes.Count - 1].Add(name_r, ray1);
+                    return ray1;
+                
+                case "arc":
+                    string name_a = node.Children[0].Value.ToString();
+                    object? p1_a = Evaluate(node.Children[1]);
+                    object? p2_a = Evaluate(node.Children[2]);
+                    object? p3_a = Evaluate(node.Children[3]);
+                    object? m_a  = Evaluate(node.Children[4]);
+                    Arc<T> arc1 = new Arc<T>(name_a, FigureColor, (Point<T>)p1_a, (Point<T>)p2_a, (Point<T>)p3_a, (Measure<T>)m_a);
+                    Scopes[Scopes.Count - 1].Add(name_a, arc1);
+                    return arc1;
+                
+                case "circle":
+                    string name_c = node.Children[0].Value.ToString();
+                    object? p_c = Evaluate(node.Children[1]);
+                    object? m_c = Evaluate(node.Children[2]);
+                    Circle<T> circle1 = new Circle<T>(name_c, FigureColor, (Point<T>)p_c, (Measure<T>)m_c);
+                    Scopes[Scopes.Count - 1].Add(name_c, circle1);
+                    return circle1;
                 
                 // Si el nodo no coincide con ninguno de los anteriores lanza un error
                 default:

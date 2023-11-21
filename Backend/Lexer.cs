@@ -243,6 +243,8 @@ namespace INTERPRETE_C__to_HULK
                     return new Token(TokenType.IN,"in");
                 case "if":
                     return new Token(TokenType.IF,"if");
+                case "then":
+                    return new Token(TokenType.THEN,"then");
                 case "else":
                     return new Token(TokenType.ELSE,"else");
                 case "function":
@@ -277,6 +279,8 @@ namespace INTERPRETE_C__to_HULK
                     return new Token(TokenType.CIRCLE, "circle");
                 case "arc":
                     return new Token(TokenType.ARC,"arc");
+                case "draw":
+                    return new Token(TokenType.DRAW,"draw"); 
                 //*
                 
                 default:

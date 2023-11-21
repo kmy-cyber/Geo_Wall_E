@@ -24,6 +24,7 @@ namespace INTERPRETE_C__to_HULK
         LET,
         IN,
         IF,
+        THEN,
         ELSE,
         TRUE,
         FALSE,
@@ -41,6 +42,8 @@ namespace INTERPRETE_C__to_HULK
         RAY,
         CIRCLE,
         ARC,
+        DRAW,
+
 
 
         //?
