@@ -270,42 +270,49 @@ namespace INTERPRETE_C__to_HULK
                 
                 //* GEO_WALL_E
 
+                // declaracion de punto aleatorio
                 case "point":
                     string name_p = node.Children[0].Value.ToString();
                     Point<T> point = new Point<T>(name_p, FigureColor);
                     Scopes[Scopes.Count - 1].Add(name_p, point);
                     return point;
                 
+                //declaracion de linea aleatoria
                 case "line_d":
                     string name_ld = node.Children[0].Value.ToString();
                     Line<T> line = new Line<T>(name_ld, FigureColor);
                     Scopes[Scopes.Count - 1].Add(name_ld, line);
                     return line;
                 
+                //declaracion de segmento aleatorio
                 case "segment_d":
                     string name_sd = node.Children[0].Value.ToString();
                     Segment<T> segment = new Segment<T>(name_sd, FigureColor);
                     Scopes[Scopes.Count - 1].Add(name_sd, segment);
                     return segment;
                 
+                //declaracion de rayo aleatorio
                 case "ray_d":
                     string name_rd = node.Children[0].Value.ToString();
                     Ray<T> ray = new Ray<T>(name_rd, FigureColor);
                     Scopes[Scopes.Count - 1].Add(name_rd, ray);
                     return ray;
                 
+                //declaracion de arco aleatorio
                 case "arc_d":
                     string name_ad = node.Children[0].Value.ToString();
                     Arc<T> arc = new Arc<T>(name_ad, FigureColor);
                     Scopes[Scopes.Count - 1].Add(name_ad, arc);
                     return arc;
                 
+                //declaracion de circulo aleatorio
                 case "circle_d":
                     string name_cd = node.Children[0].Value.ToString();
                     Circle<T> circle = new Circle<T>(name_cd, FigureColor);
                     Scopes[Scopes.Count - 1].Add(name_cd, circle);
                     return circle;
                 
+                //declaracion de linea definida
                 case "line":
                     string name_l = node.Children[0].Value.ToString();
                     object? p1_l = Evaluate(node.Children[1]);
@@ -314,6 +321,7 @@ namespace INTERPRETE_C__to_HULK
                     Scopes[Scopes.Count - 1].Add(name_l, line1);
                     return line1;
                 
+                //declaracion de segmento definido
                 case "segment":
                     string name_s = node.Children[0].Value.ToString();
                     object? p1_s = Evaluate(node.Children[1]);
@@ -322,6 +330,7 @@ namespace INTERPRETE_C__to_HULK
                     Scopes[Scopes.Count - 1].Add(name_s, segment1);
                     return segment1;
                 
+                //declaracion de rayo definido
                 case "ray":
                     string name_r = node.Children[0].Value.ToString();
                     object? p1_r = Evaluate(node.Children[1]);
@@ -330,6 +339,7 @@ namespace INTERPRETE_C__to_HULK
                     Scopes[Scopes.Count - 1].Add(name_r, ray1);
                     return ray1;
                 
+                //declaracion de arco definido
                 case "arc":
                     string name_a = node.Children[0].Value.ToString();
                     object? p1_a = Evaluate(node.Children[1]);
@@ -340,6 +350,7 @@ namespace INTERPRETE_C__to_HULK
                     Scopes[Scopes.Count - 1].Add(name_a, arc1);
                     return arc1;
                 
+                //declaracion de circulo definido
                 case "circle":
                     string name_c = node.Children[0].Value.ToString();
                     object? p_c = Evaluate(node.Children[1]);

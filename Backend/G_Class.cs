@@ -25,6 +25,8 @@ namespace G_Wall_E
         {
             Name = name;
             Color = color;
+            //X = new Random();
+            //Y = new Random(); 
         }
         
         public Point(string name, string color, T x, T y)

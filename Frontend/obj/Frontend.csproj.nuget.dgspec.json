@@ -1,7 +1,7 @@
 {
   "format": 1,
   "restore": {
-    "D:\\PROGRAMACION\\3ER PROYECTO\\Geo_Wall_E\\frontend\\Frontend.csproj": {}
+    "D:\\PROGRAMACION\\3ER PROYECTO\\Geo_Wall_E\\Frontend\\Frontend.csproj": {}
   },
   "projects": {
     "D:\\PROGRAMACION\\3ER PROYECTO\\Geo_Wall_E\\Backend\\Backend.csproj": {
@@ -63,14 +63,14 @@
         }
       }
     },
-    "D:\\PROGRAMACION\\3ER PROYECTO\\Geo_Wall_E\\frontend\\Frontend.csproj": {
+    "D:\\PROGRAMACION\\3ER PROYECTO\\Geo_Wall_E\\Frontend\\Frontend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\PROGRAMACION\\3ER PROYECTO\\Geo_Wall_E\\frontend\\Frontend.csproj",
+        "projectUniqueName": "D:\\PROGRAMACION\\3ER PROYECTO\\Geo_Wall_E\\Frontend\\Frontend.csproj",
         "projectName": "Frontend",
-        "projectPath": "D:\\PROGRAMACION\\3ER PROYECTO\\Geo_Wall_E\\frontend\\Frontend.csproj",
+        "projectPath": "D:\\PROGRAMACION\\3ER PROYECTO\\Geo_Wall_E\\Frontend\\Frontend.csproj",
         "packagesPath": "C:\\Users\\Cami\\.nuget\\packages\\",
-        "outputPath": "D:\\PROGRAMACION\\3ER PROYECTO\\Geo_Wall_E\\frontend\\obj\\",
+        "outputPath": "D:\\PROGRAMACION\\3ER PROYECTO\\Geo_Wall_E\\Frontend\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

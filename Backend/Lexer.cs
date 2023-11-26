@@ -281,6 +281,11 @@ namespace INTERPRETE_C__to_HULK
                     return new Token(TokenType.ARC,"arc");
                 case "draw":
                     return new Token(TokenType.DRAW,"draw"); 
+                case "color":
+                    return new Token(TokenType.COLOR,"color");
+                case "import":
+                    return new Token(TokenType.IMPORT,"import");
+                
                 //*
                 
                 default:

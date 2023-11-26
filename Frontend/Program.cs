@@ -58,6 +58,7 @@ namespace INTERPRETE_C__to_HULK
                  Console.Write("> ");
                  // Input (linea) a analizar
                  string? s = Console.ReadLine();
+                 //string? s = "let x=4 in \n print(x);";
                  if(s == "")
                  {
                      break;

@@ -67,13 +67,27 @@ namespace INTERPRETE_C__to_HULK
             {
                 return Conditional();
             }
-
-            if( position < TS.Count && Convert.ToString(TS[position].Value) == "function" )
+            if( position < TS.Count && Convert.ToString(TS[position].Value) == "import" )
             {
-                return Function();
+                return Conditional();
             }
 
             return Layer_6(); 
+        }
+
+        /// <summary>
+        /// Este método se encarga de procesar la importacion de codigo
+        /// </summary>
+        public Node Import_Code()
+        {
+            position ++;
+            if(TS[position].Type == TokenType.STRING)
+            {
+                string dir = TS[position].Value;
+                Node dir_code = new Node { Type = "direction", Value = dir};
+                return new Node { Type = "import" , Children = new List<Node>{ dir_code}};
+            }
+            Input_Error("Se espera un string con la direccion del archivo a importar");
         }
 
     	/// <summary>
@@ -83,14 +97,14 @@ namespace INTERPRETE_C__to_HULK
         {
             position++;
             Node assigments = new Node{ Type = "assigment_list"};
-            bool comma = false;
+            bool d_comma = false;
 
             do{
-                if (comma)
+                if (d_comma)
                 {
                     position++;
                 }
-                comma = true;
+                d_comma = true;
 
                 Expect(TokenType.VARIABLE,"nombre_de_variable");
                 Node name = new Node { Type = "name" , Value = TS[position-1].Value};
@@ -101,7 +115,7 @@ namespace INTERPRETE_C__to_HULK
                 Node var = new Node { Type = "assigment", Children = new List<Node>{name,value}}; 
                 assigments.Children.Add(var);
 
-            }while(TS[position].Type == TokenType.COMMA);
+            }while(TS[position].Type == TokenType.D_COMMA);
 
             Expect(TokenType.IN,"in");
             Node operations = Global_Layer();
@@ -140,35 +154,15 @@ namespace INTERPRETE_C__to_HULK
         }
 
         /// <summary>
-        /// Este método se encarga de procesar la declaracion de funciones del lenguaje (FUNCTION)
+        /// Este método se encarga de procesar la declaracion de funciones del lenguaje
         /// </summary>
         public Node Function()
         {
             position++;
-            Node parammeters = new Node{ Type = "parameters"};
-
-            Expect( TokenType.VARIABLE,"nombre_de_funcion" );
-            Node function_name = new Node { Type = "f_name" , Value = TS[position-1].Value};
-            Expect( TokenType.L_PHARENTESYS,"(" );
-
-            while (TS[position].Type == TokenType.VARIABLE)
-            {
-                Expect( TokenType.VARIABLE,"nombre_del_parametro" );
-                Node parammeter_name = new Node { Type = "p_name" , Value = TS[position-1].Value};
-                parammeters.Children.Add(parammeter_name);
-                
-                if(TS[position].Type == TokenType.COMMA)
-                {
-                    position++;
-                }
-            }
-            
-            Expect( TokenType.R_PHARENTESYS,")" );
-            Expect( TokenType.DO, "=>");
+        
             Node operation = Global_Layer();
             Exceptions_Missing(operation,"function");
-            Node function = new Node { Type = "Function", Children = new List<Node>{ function_name, parammeters, operation}};
-            return function; 
+            return operation; 
         }
 
         #region CAPAS // Estos métodos implementan la precedencia de operadores del lenguaje
@@ -409,7 +403,7 @@ namespace INTERPRETE_C__to_HULK
                         position++;
                         Node Geo = Layer_0();
                     }
-                    if(TS[position+1].Type == TokenType.L_PHARENTESYS) // si el token siguiente es parentesis procesar como funcion declarada
+                    if(TS[position+1].Type == TokenType.L_PHARENTESYS) // si el token siguiente es parentesis procesar como funcion 
                     {
                         dynamic? f_name = Convert.ToString(TS[position++].Value);
                         position++;
@@ -430,6 +424,11 @@ namespace INTERPRETE_C__to_HULK
                         }
 
                         Expect(TokenType.R_PHARENTESYS, ")");
+                        if(TS[position] == TokenType.EQUAL)
+                        {
+                            Node action = Function();
+                            return new Node { Type = "function", Children = new List<Node> {name,param,action}};
+                        }
                         return new Node { Type = "declared_function", Children = new List<Node> {name,param}};
 
                     }

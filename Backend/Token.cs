@@ -42,7 +42,10 @@ namespace INTERPRETE_C__to_HULK
         RAY,
         CIRCLE,
         ARC,
-        DRAW,
+        IMPORT,
+        RESTORE,
+        DRAW, //! IMPLEMENTAR
+        COLOR, //! IMPLEMENTAR
 
 
 
