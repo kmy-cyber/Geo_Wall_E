@@ -359,6 +359,13 @@ namespace INTERPRETE_C__to_HULK
                     Scopes[Scopes.Count - 1].Add(name_c, circle1);
                     return circle1;
                 
+                //declaracion de measure definida
+                case "measure":
+                    string name_m = node.Children[0].Value.ToString();
+                    object? p1_m = Evaluate(node.Children[1]);
+                    object? p2_m = Evaluate(node.Children[2]);
+                    Measure<T> measure1 = new Measure<T>(name_m, FigureColor, (Point<T>)p1_m, (Point<T>)p2_m);
+                
                 // Si el nodo no coincide con ninguno de los anteriores lanza un error
                 default:
                     throw new Exception("SEMANTIC ERROR: Unknown operator: " + node.Type);

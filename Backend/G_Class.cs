@@ -173,8 +173,11 @@ namespace G_Wall_E
     public class Measure<T> : IComparable<Measure<T>> where T : IComparable<T>
     {
         public T Value { get; set; }
-
+        public string Color { get; private set; }
+        public string Name { get; private set; }
         public delegate T Operator(T a, T b);
+        public Point<T> P1 { get; set; }
+        public Point<T> P2 { get; set; }
 
         public int CompareTo(Measure<T> other)
         {
@@ -184,6 +187,15 @@ namespace G_Wall_E
             }
 
             return Value.CompareTo(other.Value);
+        }
+
+        public Measure(string color, string name, Point<T> p1, Point<T> p2)
+        {
+            Color = color;
+            Name = name;
+            P1 = p1;
+            P2 = p2;
+
         }
     }
 

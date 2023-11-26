@@ -285,6 +285,8 @@ namespace INTERPRETE_C__to_HULK
                     return new Token(TokenType.COLOR,"color");
                 case "import":
                     return new Token(TokenType.IMPORT,"import");
+                case "measure":
+                    return new Token(TokenType.MEASURE, "measure");
                 
                 //*
                 

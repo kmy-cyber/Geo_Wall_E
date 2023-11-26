@@ -328,8 +328,20 @@ namespace INTERPRETE_C__to_HULK
                     Node var4 = Factor();
                     Expect(TokenType.R_PHARENTESYS,")");
                     return new Node{ Type = "arc", Children = new List<Node>{name, var1, var2, var3, var4} };
+                }
+
+                else if(TS[position].Type == TokenType.MEASURE)//recibe dos variables
+                {
+                    Node name = new Node{Type = "m_name", Value = TS[position-2].Value.ToString()};
+                    Expect(TokenType.L_PHARENTESYS,"(");
+                    Node point_1 = Factor();
+                    Expect(TokenType.COMMA,",");
+                    Node point_2 = Factor();
+                    Expect(TokenType.R_PHARENTESYS,")");
+                    return new Node{ Type = "measuree", Children = new List<Node>{name, point_1, point_2} };
 
                 }
+
 
                 
 
@@ -424,7 +436,7 @@ namespace INTERPRETE_C__to_HULK
                         }
 
                         Expect(TokenType.R_PHARENTESYS, ")");
-                        if(TS[position] == TokenType.EQUAL)
+                        if(TS[position].Type == TokenType.EQUAL)
                         {
                             Node action = Function();
                             return new Node { Type = "function", Children = new List<Node> {name,param,action}};
