@@ -126,7 +126,7 @@ namespace G_Wall_E
             Name = name;
             Color = color;
             P1 = new Point<T>(name, color);
-            Radius = new Measure<T>();
+            Radius = new Measure<T>(); //da error de que no le estas dando los parametros de entrada
         }
 
         public Circle(string name, string color, Point<T> p1, Measure<T> radius)
@@ -155,7 +155,7 @@ namespace G_Wall_E
             P1 = new Point<T>(name, color);
             P2 = new Point<T>(name, color);
             P3 = new Point<T>(name, color);
-            Distance = new Measure<T>();
+            Distance = new Measure<T>(); //aqui da error de que no le estas dando los parametros de entrada para crear measure
         } 
 
         public Arc(string color, string name, Point<T> p1, Point<T> p2, Point<T> p3, Measure<T> distance)
@@ -173,7 +173,7 @@ namespace G_Wall_E
     public class Measure<T> : IComparable<Measure<T>> where T : IComparable<T>
     {
         public T Value { get; set; }
-        public string Color { get; private set; }
+        //public string Color { get; private set; } //measure no lleva color
         public string Name { get; private set; }
         public delegate T Operator(T a, T b);
         public Point<T> P1 { get; set; }
@@ -189,9 +189,9 @@ namespace G_Wall_E
             return Value.CompareTo(other.Value);
         }
 
-        public Measure(string color, string name, Point<T> p1, Point<T> p2)
+        public Measure(/*string color,*/ string name, Point<T> p1, Point<T> p2)
         {
-            Color = color;
+            //Color = color;
             Name = name;
             P1 = p1;
             P2 = p2;

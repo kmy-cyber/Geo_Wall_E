@@ -83,7 +83,7 @@ namespace INTERPRETE_C__to_HULK
             position ++;
             if(TS[position].Type == TokenType.STRING)
             {
-                string dir = TS[position].Value;
+                string dir = (string)TS[position].Value;
                 Node dir_code = new Node { Type = "direction", Value = dir};
                 return new Node { Type = "import" , Children = new List<Node>{ dir_code}};
             }
@@ -338,7 +338,7 @@ namespace INTERPRETE_C__to_HULK
                     Expect(TokenType.COMMA,",");
                     Node point_2 = Factor();
                     Expect(TokenType.R_PHARENTESYS,")");
-                    return new Node{ Type = "measuree", Children = new List<Node>{name, point_1, point_2} };
+                    return new Node{ Type = "measure", Children = new List<Node>{name, point_1, point_2} };
 
                 }
 
