@@ -42,13 +42,24 @@ namespace INTERPRETE_C__to_HULK
         RAY,
         CIRCLE,
         ARC,
+
+        // funciones G#
         MEASURE,
         IMPORT,
-        RESTORE,
-        DRAW, //! IMPLEMENTAR
-        COLOR, //! IMPLEMENTAR
+        RESTORE, //! IMPLEMENTAR!
+        DRAW, //! IMPLEMENTAR!
+        COLOR, //! IMPLEMENTAR!
+        COUNT, //IMPLEMENTAR!
+        
+        //funciones que devuelve una secuencia G#
+        SEQUENCE, //en codigo: point sequence etc IMPLEMENTAR!
 
-
+        //variables y operadores G#
+        UNDERSCORE, //_ IMPLEMENTAR!
+        UNDEFINED, //IMPLEMENTAR!
+        INFINITE, //token que se usa en declaracion de secuencias infinitas como {a...} o {a...b} IMPLEMENTAR!
+        //REVISAR EL OPERADOR + YA QUE EN G# SE USA PARA CONCATENAR SECUENCIAS Y PROBABLEMENTE STRINGS Y OTROS
+        COLOR_RANGE, //colores blue red etc IMPLEMENTAR!
 
         //?
         VARIABLE,

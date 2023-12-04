@@ -288,7 +288,7 @@ namespace G_Wall_E
 
         public Measure(string color, string name, Point p1, Point p2)
         {
-            Color = color;
+            //Color = color;
             Name = name;
             P1 = p1;
             P2 = p2;
