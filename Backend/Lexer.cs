@@ -21,8 +21,6 @@ namespace INTERPRETE_C__to_HULK
             Tokens_sequency = Get_Sequency(Text,position); // Genera la secuencia de tokens
         }
 
-
-
     #region  TOKENS
 
         /// <summary>

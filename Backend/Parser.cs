@@ -1,3 +1,4 @@
+using System.Xml;
 using System.Text.RegularExpressions;
 using System.Dynamic;
 using System.Linq.Expressions;
@@ -43,9 +44,15 @@ namespace INTERPRETE_C__to_HULK
         /// </returns>
         public Node Parse()
         {
-            Node Tree =  Global_Layer();
-            Expect(TokenType.D_COMMA, ";");
-            return Tree;
+            List<Node> Children = new List<Node>();
+
+            while (TS[position].Type != TokenType.EOF)
+            {
+                Children.Add(Global_Layer());
+                Expect(TokenType.D_COMMA, ";");
+            }
+
+            return new Node { Type = "Root_of_the_tree", Children = Children };
         }
         
         /// <summary>
@@ -53,9 +60,14 @@ namespace INTERPRETE_C__to_HULK
         /// </summary>
         public Node Global_Layer()
         {
-            if( position < TS.Count && Convert.ToString(TS[position].Value) == "print" )
+            if( position < TS.Count && Convert.ToString(TS[position].Value) == "draw" )
             {
-                return Showing();
+                return Drawable();
+            }
+            
+            if( position < TS.Count && Convert.ToString(TS[position].Value) == "measure" )
+            {
+                return Measure();
             }
 
             if( position < TS.Count && Convert.ToString(TS[position].Value) == "let" )
@@ -83,11 +95,12 @@ namespace INTERPRETE_C__to_HULK
             position ++;
             if(TS[position].Type == TokenType.STRING)
             {
-                string dir = TS[position].Value;
+                string dir = TS[position].Value.ToString();
                 Node dir_code = new Node { Type = "direction", Value = dir};
                 return new Node { Type = "import" , Children = new List<Node>{ dir_code}};
             }
             Input_Error("Se espera un string con la direccion del archivo a importar");
+            return null;
         }
 
     	/// <summary>
@@ -126,16 +139,36 @@ namespace INTERPRETE_C__to_HULK
         }
 
         /// <summary>
-        /// Este método se encarga de procesar las impresiones del lenguaje (PRINT)
+        /// Este método se encarga de procesar los objetos a dibujar (DRAW)
         /// </summary>
-        public Node Showing()
+        public Node Drawable()
+        {
+            position++;            
+            Node expression = Global_Layer();
+            Node str = new Node {Type = "empty" };
+
+            if (TS[position].Type == TokenType.STRING)
+            {
+                str = Factor();
+            }
+            
+            return new Node {Type = "draw", Children = new List<Node>{expression, str}};
+        }
+        
+        /// <summary>
+        /// Este método se encarga de procesar las medidas entre 2 puntos (MEASURE)
+        /// </summary>
+        public Node Measure()
         {
             position++;
-            Expect(TokenType.L_PHARENTESYS, "(");
-            
-            Node expression = Global_Layer();
+
+            Expect(TokenType.L_PHARENTESYS,"(");
+            Node p1 = Factor();
+            Expect(TokenType.COMMA,",");
+            Node p2 = Factor();
             Expect(TokenType.R_PHARENTESYS,")");
-            return new Node {Type = "print", Children = new List<Node>{expression}};
+            
+            return new Node {Type = "measure", Children = new List<Node>{p1, p2}};
         }
 
         /// <summary>
@@ -270,6 +303,7 @@ namespace INTERPRETE_C__to_HULK
                 if(TS[position].Type == TokenType.LINE) //recibe dos variables
                 {
                     Node name = new Node{Type = "g_name", Value = TS[position-2].Value.ToString()};
+                    position++;
                     Expect(TokenType.L_PHARENTESYS,"(");
                     Node var1 = Factor();
                     Expect(TokenType.COMMA,",");
@@ -282,6 +316,7 @@ namespace INTERPRETE_C__to_HULK
                 else if(TS[position].Type == TokenType.SEGMENT) //recibe dos variables
                 {
                     Node name = new Node{Type = "g_name", Value = TS[position-2].Value.ToString()};
+                    position++;
                     Expect(TokenType.L_PHARENTESYS,"(");
                     Node var1 = Factor();
                     Expect(TokenType.COMMA,",");
@@ -294,6 +329,7 @@ namespace INTERPRETE_C__to_HULK
                 else if(TS[position].Type == TokenType.RAY)//recibe dos variables
                 {
                     Node name = new Node{Type = "g_name", Value = TS[position-2].Value.ToString()};
+                    position++;
                     Expect(TokenType.L_PHARENTESYS,"(");
                     Node var1 = Factor();
                     Expect(TokenType.COMMA,",");
@@ -306,6 +342,7 @@ namespace INTERPRETE_C__to_HULK
                 else if(TS[position].Type == TokenType.CIRCLE)//recibe dos variables
                 {
                     Node name = new Node{Type = "g_name", Value = TS[position-2].Value.ToString()};
+                    position++;
                     Expect(TokenType.L_PHARENTESYS,"(");
                     Node point = Factor();
                     Expect(TokenType.COMMA,",");
@@ -318,6 +355,7 @@ namespace INTERPRETE_C__to_HULK
                 else if(TS[position].Type == TokenType.ARC)//recibe tres variables
                 {
                     Node name = new Node{Type = "g_name", Value = TS[position-2].Value.ToString()};
+                    position++;
                     Expect(TokenType.L_PHARENTESYS,"(");
                     Node var1 = Factor();
                     Expect(TokenType.COMMA,",");
@@ -332,13 +370,14 @@ namespace INTERPRETE_C__to_HULK
 
                 else if(TS[position].Type == TokenType.MEASURE)//recibe dos variables
                 {
-                    Node name = new Node{Type = "m_name", Value = TS[position-2].Value.ToString()};
+                    Node name = new Node{Type = "g_name", Value = TS[position-2].Value.ToString()};
+                    position++;
                     Expect(TokenType.L_PHARENTESYS,"(");
                     Node point_1 = Factor();
                     Expect(TokenType.COMMA,",");
                     Node point_2 = Factor();
                     Expect(TokenType.R_PHARENTESYS,")");
-                    return new Node{ Type = "measuree", Children = new List<Node>{name, point_1, point_2} };
+                    return new Node{ Type = "measure", Children = new List<Node>{name, point_1, point_2} };
 
                 }
 
@@ -412,8 +451,8 @@ namespace INTERPRETE_C__to_HULK
                 {
                     if(TS[position+1].Type == TokenType.EQUAL)
                     {
-                        position++;
-                        Node Geo = Layer_0();
+                        position+=2;
+                        return Layer_0();
                     }
                     if(TS[position+1].Type == TokenType.L_PHARENTESYS) // si el token siguiente es parentesis procesar como funcion 
                     {
@@ -492,7 +531,6 @@ namespace INTERPRETE_C__to_HULK
                 {
                     position++;
                     Node name = Factor();
-                    Expect(TokenType.VARIABLE, TS[position].Value);
                     Node x = null;
                     Node y = null;
                     
