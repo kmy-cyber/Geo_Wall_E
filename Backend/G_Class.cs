@@ -1,5 +1,7 @@
 using System;
 using System.Globalization;
+using System.Numerics;
+using System.Text.Json.Serialization;
 using Microsoft.VisualBasic.CompilerServices;
 namespace G_Wall_E
 {
@@ -7,158 +9,241 @@ namespace G_Wall_E
     {
     }
 
-    public interface IGeometric_Place
+    public interface IDrawable
     {
+        public string Msg { get; set; }
         public string Color { get; }
         public string Name { get; }
+
+        public DrawableProperties Export();
     }
 
+    public class DrawableProperties
+    {
+        public string Msg { get; set; }
+        public string Color { get; set; }
+        public string Type { get; set; }
+        public string Name { get; set; }
 
-    public class Point<T> : IGeometric_Place
+        public double? X { get; set; }
+        public double? Y { get; set; }
+        public DrawableProperties P1 { get; set; }
+        public DrawableProperties P2 { get; set; }
+        public DrawableProperties P3 { get; set; }
+        public double? Radius { get; set; }
+    }
+
+    public class Point : IDrawable
     {
         public string Color { get; private set; }
         public string Name { get; private set; }
-        public T X { get; set; }
-        public T Y { get; set; }
+        
+        [JsonPropertyName("coordinateX")]
+        public double X { get; set; }
+        
+        [JsonPropertyName("coordinateY")]
+        public double Y { get; set; }
+        public string Msg { get; set; }
 
         public Point(string name, string color)
         {
             Name = name;
             Color = color;
-            //X = new Random();
-            //Y = new Random(); 
+            X = new Random().Next() % 525;
+            Y = new Random().Next() % 600;
         }
         
-        public Point(string name, string color, T x, T y)
+        public Point(string name, string color, double x, double y)
         {
             Name = name;
             Color = color;
             X = x;
             Y = y;
         }
+
+        public DrawableProperties Export()
+        {
+            return new DrawableProperties {
+                Name = Name,
+                Color = Color,
+                Type = "point",
+                Msg = Msg,
+                X = X,
+                Y = Y
+            };
+        }
     }
 
-
-    public class Line<T> : IGeometric_Place
+    public class Line : IDrawable
     {
         public string Color { get; private set; }
         public string Name { get; private set; }
-        public Point<T> P1 { get; set; }
-        public Point<T> P2 { get; set; }
+        public Point P1 { get; set; }
+        public Point P2 { get; set; }
+        public string Msg { get; set; }
 
         public Line(string name, string color)
         {
             Name = name;
             Color = color;
-            P1 = new Point<T>(name, color);
-            P2 = new Point<T>(name, color);
+            P1 = new Point(name, color);
+            P2 = new Point(name, color);
         }
 
-        public Line(string name, string color, Point<T> p1, Point<T> p2)
+        public Line(string name, string color, Point p1, Point p2)
         {
             Name = name;
             Color = color;
             P1 = p1;
             P2 = p2;
         }
+
+        public DrawableProperties Export()
+        {
+            return new DrawableProperties {
+                Name = Name,
+                Color = Color,
+                Type = "line",
+                Msg = Msg,
+                P1 = P1.Export(),
+                P2 = P2.Export()
+            };
+        }
     }
 
-
-    public class Segment<T> : IGeometric_Place
+    public class Segment : IDrawable
     {
         public string Color { get; private set; }
         public string Name { get; private set; }
-        public Point<T> P1 { get; set; }
-        public Point<T> P2 { get; set; }
+        public Point P1 { get; set; }
+        public Point P2 { get; set; }
+        public string Msg { get; set; }
 
         public Segment(string name, string color)
         {
             Name = name;
             Color = color;
-            P1 = new Point<T>(name, color);
-            P2 = new Point<T>(name, color);
+            P1 = new Point(name, color);
+            P2 = new Point(name, color);
         }
 
-        public Segment(string name, string color, Point<T> p1, Point<T> p2)
+        public Segment(string name, string color, Point p1, Point p2)
         {
             Name = name;
             Color = color;
             P1 = p1;
             P2 = p2;
         }
+
+        public DrawableProperties Export()
+        {
+            return new DrawableProperties {
+                Name = Name,
+                Color = Color,
+                Type = "segment",
+                Msg = Msg,
+                P1 = P1.Export(),
+                P2 = P2.Export()
+            };
+        }
     }
 
-
-    public class Ray<T> : IGeometric_Place
+    public class Ray : IDrawable
     {
         public string Color { get; private set; }
         public string Name { get; private set; }
-        public Point<T> P1 { get; set; }
-        public Point<T> P2 { get; set; }
+        public Point P1 { get; set; }
+        public Point P2 { get; set; }
+        public string Msg { get; set; }
 
         public Ray(string name, string color)
         {
             Name = name;
             Color = color;
-            P1 = new Point<T>(name, color);
-            P2 = new Point<T>(name, color);
+            P1 = new Point(name, color);
+            P2 = new Point(name, color);
         }
 
-        public Ray(string name, string color, Point<T> p1, Point<T> p2)
+        public Ray(string name, string color, Point p1, Point p2)
         {
             Name = name;
             Color = color;
             P1 = p1;
             P2 = p2;
         }
+
+        public DrawableProperties Export()
+        {
+            return new DrawableProperties {
+                Name = Name,
+                Color = Color,
+                Type = "ray",
+                Msg = Msg,
+                P1 = P1.Export(),
+                P2 = P2.Export()
+            };
+        }
     }
 
-
-    public class Circle<T> : IGeometric_Place where T : IComparable<T>
+    public class Circle : IDrawable
     {
         public string Color { get; private set; }
         public string Name { get; private set; }
-        public Point<T> P1 { get; set; }
-        public Measure<T> Radius { get; set; }
+        public Point P1 { get; set; }
+        public Measure Radius { get; set; }
+        public string Msg { get; set; }
 
         public Circle(string name, string color)
         {
             Name = name;
             Color = color;
-            P1 = new Point<T>(name, color);
-            Radius = new Measure<T>(); //da error de que no le estas dando los parametros de entrada
+            P1 = new Point(name, color);
+            Point P2 = new Point(name, color);
+            Radius = new Measure(color, "meassure", P1, P2);
         }
 
-        public Circle(string name, string color, Point<T> p1, Measure<T> radius)
+        public Circle(string name, string color, Point p1, Measure radius)
         {
             Name = name;
             Color = color;
             P1 = p1;
             Radius = radius;
         }
+
+        public DrawableProperties Export()
+        {
+            return new DrawableProperties {
+                Name = Name,
+                Color = Color,
+                Type = "circle",
+                Msg = Msg,
+                P1 = P1.Export(),
+                Radius = Radius.Execute()
+            };
+        }
     }
 
-
-    public class Arc<T> : IGeometric_Place where T : IComparable<T>
+    public class Arc : IDrawable
     {
         public string Color { get; private set; }
         public string Name { get; private set; }
-        public Point<T> P1 { get; set; }
-        public Point<T> P2 { get; set; }
-        public Point<T> P3 { get; set; }
-        public Measure<T> Distance { get; set; }
+        public Point P1 { get; set; }
+        public Point P2 { get; set; }
+        public Point P3 { get; set; }
+        public Measure Distance { get; set; }
+        public string Msg { get; set; }
 
         public Arc(string color, string name)
         {
             Color = color;
             Name = name;
-            P1 = new Point<T>(name, color);
-            P2 = new Point<T>(name, color);
-            P3 = new Point<T>(name, color);
-            Distance = new Measure<T>(); //aqui da error de que no le estas dando los parametros de entrada para crear measure
+            P1 = new Point(name, color);
+            P2 = new Point(name, color);
+            P3 = new Point(name, color);
+            Distance = new Measure(color, name, P1, P3);
         } 
 
-        public Arc(string color, string name, Point<T> p1, Point<T> p2, Point<T> p3, Measure<T> distance)
+        public Arc(string color, string name, Point p1, Point p2, Point p3, Measure distance)
         {
             Color = color;
             Name = name;
@@ -167,19 +252,31 @@ namespace G_Wall_E
             P3 = p3;
             Distance = distance;
         }       
+
+        public DrawableProperties Export()
+        {
+            return new DrawableProperties {
+                Name = Name,
+                Color = Color,
+                Type = "arc",
+                Msg = Msg,
+                P1 = P1.Export(),
+                P2 = P2.Export(),
+                P3 = P3.Export(),
+                Radius = Distance.Execute()
+            };
+        }
     }
 
-
-    public class Measure<T> : IComparable<Measure<T>> where T : IComparable<T>
+    public class Measure : IComparable<Measure>
     {
-        public T Value { get; set; }
-        //public string Color { get; private set; } //measure no lleva color
+        public double Value { get; set; }
+        public string Color { get; private set; }
         public string Name { get; private set; }
-        public delegate T Operator(T a, T b);
-        public Point<T> P1 { get; set; }
-        public Point<T> P2 { get; set; }
+        public Point P1 { get; set; }
+        public Point P2 { get; set; }
 
-        public int CompareTo(Measure<T> other)
+        public int CompareTo(Measure other)
         {
             if(other == null)
             {
@@ -189,19 +286,20 @@ namespace G_Wall_E
             return Value.CompareTo(other.Value);
         }
 
-        public Measure(/*string color,*/ string name, Point<T> p1, Point<T> p2)
+        public Measure(string color, string name, Point p1, Point p2)
         {
             //Color = color;
             Name = name;
             P1 = p1;
             P2 = p2;
+        }
 
+        public double Execute()
+        {
+            double xDiff = P1.X - P2.X;
+            double yDiff = P1.Y - P2.Y;
+
+            return Math.Sqrt(Convert.ToDouble(xDiff * xDiff + yDiff * yDiff));
         }
     }
-
-
-   // public class Sequence
-   // {
-   //     public IEnumerable<IGeometric_Place> 
-   // }
 }

@@ -13,10 +13,11 @@ using System.Threading.Tasks;
 
 using INTERPRETE_C_to_HULK;
 using G_Wall_E;
+using System.Numerics;
 
 namespace INTERPRETE_C__to_HULK
 {
-    public class Semantic_Analyzer<T> where T : IComparable<T>
+    public class Semantic_Analyzer
     {
         Node AST; // Árbol de Análisis Sintáctico Abstracto (AST)
 
@@ -27,6 +28,8 @@ namespace INTERPRETE_C__to_HULK
         public List<Function_B> functions_declared = new List<Function_B>(); // Lista para almacenar las funciones declaradas
         
         public List<Dictionary<string,dynamic>> Scopes; // Lista de diccionarios para almacenar los ámbitos (scopes)
+
+        public List<IDrawable> Drawables;
         
         /// <summary>
         /// Constructor de la clase Semantic_Analyzer
@@ -43,6 +46,7 @@ namespace INTERPRETE_C__to_HULK
             };
             
             FigureColor = "black";
+            Drawables = new List<IDrawable>();
         }
 
         /// <summary>
@@ -57,7 +61,7 @@ namespace INTERPRETE_C__to_HULK
         /// <summary>
         ///  Método para decidir qué acción tomar en función del tipo de nodo
         /// </summary>
-        public void Choice(Node node)
+        public List<IDrawable> Choice(Node node)
         {
             switch (node.Type)
             {
@@ -70,6 +74,8 @@ namespace INTERPRETE_C__to_HULK
                     Evaluate(node);
                     break;                  
             }
+
+            return Drawables;
         }
 
         /// <summary>
@@ -80,6 +86,12 @@ namespace INTERPRETE_C__to_HULK
             // Dependiendo del tipo de nodo, realiza diferentes operaciones
             switch (node.Type)
             {
+                case "Root_of_the_tree":
+                    for(int i=0; i<node.Children.Count; i++)
+                    {
+                        Evaluate(node.Children[i]);
+                    }
+                    break;
                 // Si el nodo es un número, retorna su valor
                 case "number":
                     return node.Value;
@@ -97,6 +109,8 @@ namespace INTERPRETE_C__to_HULK
                     return Scopes[Scopes.Count - 1][node.Value.ToString()];
                 // Si el nodo es el nombre de una función declarada, retorna su valor
                 case "d_function_name":
+                    return node.Value;
+                case "g_name":
                     return node.Value;
 
                 //? Operaciones arirmeticas 
@@ -194,6 +208,28 @@ namespace INTERPRETE_C__to_HULK
                     return (bool)left_or ||  (bool)right_or;
 
                 //? Expressions
+                // Si el nodo es un "draw" lo agrega a la lista de objetos dibujables
+                case "draw":
+                    
+                    IDrawable fig = (IDrawable)Evaluate(node.Children[0]);
+
+                    if (node.Children[1].Type != "empty")
+                    {
+                        fig.Msg = Evaluate(node.Children[1]).ToString();
+                    }
+
+                    Drawables.Add(fig);
+                    break;
+                case "measure":
+                    string m_name = Evaluate(node.Children[0]).ToString(); 
+                    Point p1 = (Point)Evaluate(node.Children[1]);
+                    Point p2 = (Point)Evaluate(node.Children[2]);
+                    Measure m = new Measure(FigureColor, "measure", p1, p2);
+
+                    Scopes[Scopes.Count - 1].Add(m_name, m);
+
+                    return m.Execute();
+
                 // Si el nodo es el nombre de una función o un parámetro, retorna su valor
                 case "f_name":
                     return node.Value;
@@ -273,42 +309,42 @@ namespace INTERPRETE_C__to_HULK
                 // declaracion de punto aleatorio
                 case "point":
                     string name_p = node.Children[0].Value.ToString();
-                    Point<T> point = new Point<T>(name_p, FigureColor);
+                    Point point = new Point(name_p, FigureColor);
                     Scopes[Scopes.Count - 1].Add(name_p, point);
                     return point;
                 
                 //declaracion de linea aleatoria
                 case "line_d":
                     string name_ld = node.Children[0].Value.ToString();
-                    Line<T> line = new Line<T>(name_ld, FigureColor);
+                    Line line = new Line(name_ld, FigureColor);
                     Scopes[Scopes.Count - 1].Add(name_ld, line);
                     return line;
                 
                 //declaracion de segmento aleatorio
                 case "segment_d":
                     string name_sd = node.Children[0].Value.ToString();
-                    Segment<T> segment = new Segment<T>(name_sd, FigureColor);
+                    Segment segment = new Segment(name_sd, FigureColor);
                     Scopes[Scopes.Count - 1].Add(name_sd, segment);
                     return segment;
                 
                 //declaracion de rayo aleatorio
                 case "ray_d":
                     string name_rd = node.Children[0].Value.ToString();
-                    Ray<T> ray = new Ray<T>(name_rd, FigureColor);
+                    Ray ray = new Ray(name_rd, FigureColor);
                     Scopes[Scopes.Count - 1].Add(name_rd, ray);
                     return ray;
                 
                 //declaracion de arco aleatorio
                 case "arc_d":
                     string name_ad = node.Children[0].Value.ToString();
-                    Arc<T> arc = new Arc<T>(name_ad, FigureColor);
+                    Arc arc = new Arc(name_ad, FigureColor);
                     Scopes[Scopes.Count - 1].Add(name_ad, arc);
                     return arc;
                 
                 //declaracion de circulo aleatorio
                 case "circle_d":
                     string name_cd = node.Children[0].Value.ToString();
-                    Circle<T> circle = new Circle<T>(name_cd, FigureColor);
+                    Circle circle = new Circle(name_cd, FigureColor);
                     Scopes[Scopes.Count - 1].Add(name_cd, circle);
                     return circle;
                 
@@ -317,7 +353,7 @@ namespace INTERPRETE_C__to_HULK
                     string name_l = node.Children[0].Value.ToString();
                     object? p1_l = Evaluate(node.Children[1]);
                     object? p2_l = Evaluate(node.Children[2]);
-                    Line<T> line1 = new Line<T>(name_l, FigureColor, (Point<T>)p1_l, (Point<T>)p2_l);
+                    Line line1 = new Line(name_l, FigureColor, (Point)p1_l, (Point)p2_l);
                     Scopes[Scopes.Count - 1].Add(name_l, line1);
                     return line1;
                 
@@ -326,7 +362,7 @@ namespace INTERPRETE_C__to_HULK
                     string name_s = node.Children[0].Value.ToString();
                     object? p1_s = Evaluate(node.Children[1]);
                     object? p2_s = Evaluate(node.Children[2]);
-                    Segment<T> segment1 = new Segment<T>(name_s, FigureColor, (Point<T>)p1_s, (Point<T>)p2_s);
+                    Segment segment1 = new Segment(name_s, FigureColor, (Point)p1_s, (Point)p2_s);
                     Scopes[Scopes.Count - 1].Add(name_s, segment1);
                     return segment1;
                 
@@ -335,7 +371,7 @@ namespace INTERPRETE_C__to_HULK
                     string name_r = node.Children[0].Value.ToString();
                     object? p1_r = Evaluate(node.Children[1]);
                     object? p2_r = Evaluate(node.Children[2]);
-                    Ray<T> ray1 = new Ray<T>(name_r, FigureColor, (Point<T>)p1_r, (Point<T>)p2_r);
+                    Ray ray1 = new Ray(name_r, FigureColor, (Point)p1_r, (Point)p2_r);
                     Scopes[Scopes.Count - 1].Add(name_r, ray1);
                     return ray1;
                 
@@ -346,7 +382,7 @@ namespace INTERPRETE_C__to_HULK
                     object? p2_a = Evaluate(node.Children[2]);
                     object? p3_a = Evaluate(node.Children[3]);
                     object? m_a  = Evaluate(node.Children[4]);
-                    Arc<T> arc1 = new Arc<T>(name_a, FigureColor, (Point<T>)p1_a, (Point<T>)p2_a, (Point<T>)p3_a, (Measure<T>)m_a);
+                    Arc arc1 = new Arc(name_a, FigureColor, (Point)p1_a, (Point)p2_a, (Point)p3_a, (Measure)m_a);
                     Scopes[Scopes.Count - 1].Add(name_a, arc1);
                     return arc1;
                 
@@ -355,16 +391,9 @@ namespace INTERPRETE_C__to_HULK
                     string name_c = node.Children[0].Value.ToString();
                     object? p_c = Evaluate(node.Children[1]);
                     object? m_c = Evaluate(node.Children[2]);
-                    Circle<T> circle1 = new Circle<T>(name_c, FigureColor, (Point<T>)p_c, (Measure<T>)m_c);
+                    Circle circle1 = new Circle(name_c, FigureColor, (Point)p_c, (Measure)m_c);
                     Scopes[Scopes.Count - 1].Add(name_c, circle1);
                     return circle1;
-                
-                //declaracion de measure definida
-                case "measure":
-                    string name_m = node.Children[0].Value.ToString();
-                    object? p1_m = Evaluate(node.Children[1]);
-                    object? p2_m = Evaluate(node.Children[2]);
-                    Measure<T> measure1 = new Measure<T>(name_m, FigureColor, (Point<T>)p1_m, (Point<T>)p2_m);
                 
                 // Si el nodo no coincide con ninguno de los anteriores lanza un error
                 default:
