@@ -15,6 +15,8 @@ namespace INTERPRETE_C__to_HULK
         //PUNTUADORES
         L_PHARENTESYS,
         R_PHARENTESYS,
+        L_KEY, //LLAVE QUE DEFINE EL INICIO DE UNA SECUENCIA IMPLEMENTAR!
+        R_KEY,  //LLAVE QUE DEFINA EL FINAL DE UNA SECUENCIA IMPLEMENTAR!
         PRINT,
         COMMA,
         D_COMMA,
@@ -46,20 +48,24 @@ namespace INTERPRETE_C__to_HULK
         // funciones G#
         MEASURE,
         IMPORT,
-        RESTORE, //! IMPLEMENTAR!
-        DRAW, //! IMPLEMENTAR!
-        COLOR, //! IMPLEMENTAR!
+        RESTORE, 
+        DRAW, 
+        COLOR, 
         COUNT, //IMPLEMENTAR!
         
         //funciones que devuelve una secuencia G#
         SEQUENCE, //en codigo: point sequence etc IMPLEMENTAR!
+        INTERSECT, //implementar!
+        POINTS, //IMPLEMENTAR!
+        SAMPLES, //IMPLEMENTAR!
+        RANDOMS, //IMPLEMENTAR!
 
         //variables y operadores G#
         UNDERSCORE, //_ IMPLEMENTAR!
         UNDEFINED, //IMPLEMENTAR!
         INFINITE, //token que se usa en declaracion de secuencias infinitas como {a...} o {a...b} IMPLEMENTAR!
         //REVISAR EL OPERADOR + YA QUE EN G# SE USA PARA CONCATENAR SECUENCIAS Y PROBABLEMENTE STRINGS Y OTROS
-        COLOR_RANGE, //colores blue red etc IMPLEMENTAR!
+        COLOR_RANGE, //colores blue red etc 
 
         //?
         VARIABLE,

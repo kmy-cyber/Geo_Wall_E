@@ -44,7 +44,7 @@ namespace INTERPRETE_C__to_HULK
                     return new Token(TokenType.NUMBER, Int_Analyzer());
                 }
 
-                // Si el carácter actual es una letra o un guion bajo, retorna un token de tipo VARIABLE con el valor de la variable
+                // Si el carácter actual es una letra o un guion bajo, puede retornar un tipo variable con su valor, o puede retornar un tipo underscore
                 if (char.IsLetter(currentChar) || currentChar == '_')
                 {
                     string word = String_Analyzer();
@@ -189,6 +189,20 @@ namespace INTERPRETE_C__to_HULK
                     return new Token(TokenType.R_PHARENTESYS, ')');
                 }
 
+                //Si el caracter actual es '{', retorna un token de tipo L_KEY con el valor '{'
+                if(currentChar == '{')
+                {
+                    Move_on();
+                    return new Token(TokenType.L_KEY, '{');
+                }
+
+                //Si el caracter actual es '}', retorna un token de tipo R_KEY con el valor '}'
+                if(currentChar == '}')
+                {
+                    Move_on();
+                    return new Token(TokenType.R_KEY, '}');
+                }
+
                 // Si el carácter actual es ';', retorna un token de tipo D_COMMA con el valor ';'
                 if (currentChar == ';')
                 {
@@ -302,9 +316,13 @@ namespace INTERPRETE_C__to_HULK
 
                 //funciones que devuelven una secuencia
                 case "intersect":
+                    return new Token(TokenType.INTERSECT, word);
                 case "points":
+                    return new Token(TokenType.POINT, word);
                 case "samples":
+                    return new Token(TokenType.SAMPLES, word);
                 case "randoms":
+                    return new Token(TokenType.RANDOMS, word);
                 case "sequence":
                     return new Token(TokenType.SEQUENCE, word); //revisar este caso, ya que en codigo sería de la forma: point sequence ps;
                                                                 //por tanto, se estaria hablando de un tipo de token secuencia, donde los 
