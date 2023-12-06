@@ -199,7 +199,7 @@ namespace G_Wall_E
             Color = color;
             P1 = new Point(name, color);
             Point P2 = new Point(name, color);
-            Radius = new Measure(color, "meassure", P1, P2);
+            Radius = new Measure(color, "measure", P1, P2);
         }
 
         public Circle(string name, string color, Point p1, Measure radius)
@@ -288,7 +288,7 @@ namespace G_Wall_E
 
         public Measure(string color, string name, Point p1, Point p2)
         {
-            //Color = color;
+            Color = color;
             Name = name;
             P1 = p1;
             P2 = p2;
