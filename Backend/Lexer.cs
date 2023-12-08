@@ -21,7 +21,9 @@ namespace INTERPRETE_C__to_HULK
             Tokens_sequency = Get_Sequency(Text, position); // Genera la secuencia de tokens
         }
 
-    #region  TOKENS
+        #region  TOKENS
+
+
 
         /// <summary>
         /// Metodo que clasifica los elementos de la entrada en su token correspondiente
@@ -57,6 +59,7 @@ namespace INTERPRETE_C__to_HULK
                 {
                     string op = Infinite_Analyzer();
                     if (op == "...") return Own_Words(op);
+                    else Input_Error("Invalid token " + "'" + op + "'");
                 }
 
                 // Si el carácter actual es un operador, retorna un token de tipo OPERATOR con el valor del operador
@@ -190,14 +193,14 @@ namespace INTERPRETE_C__to_HULK
                 }
 
                 //Si el caracter actual es '{', retorna un token de tipo L_KEY con el valor '{'
-                if(currentChar == '{')
+                if (currentChar == '{')
                 {
                     Move_on();
                     return new Token(TokenType.L_KEY, '{');
                 }
 
                 //Si el caracter actual es '}', retorna un token de tipo R_KEY con el valor '}'
-                if(currentChar == '}')
+                if (currentChar == '}')
                 {
                     Move_on();
                     return new Token(TokenType.R_KEY, '}');
@@ -402,7 +405,7 @@ namespace INTERPRETE_C__to_HULK
         {
             string number = "";
             int dot_counter = 0;
-            while (currentChar != '\0' && (char.IsDigit(currentChar) || currentChar == '.'))
+            while (currentChar != '\0' && (char.IsDigit(currentChar) || (currentChar == '.' && Text[position + 1] != '.')))
             {
                 if (currentChar == '.') dot_counter++;
                 number += currentChar;
@@ -413,7 +416,7 @@ namespace INTERPRETE_C__to_HULK
                 number += currentChar;
                 Input_Error("Invalid token " + "\'" + number + "\'");
             }
-            if (currentChar == '.') number += '0';
+            if (currentChar == '.' && Text[position + 1] != '.') number += '0';
             if (dot_counter > 1) Input_Error("Invalid number");
             return Convert.ToDouble(number);
         }
