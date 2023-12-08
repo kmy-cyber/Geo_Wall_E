@@ -54,7 +54,7 @@ namespace INTERPRETE_C__to_HULK
         COUNT, //IMPLEMENTAR!
         
         //funciones que devuelve una secuencia G#
-        SEQUENCE, //en codigo: point sequence etc IMPLEMENTAR!
+        SEQUENCE, //en codigo: point sequence etc 
         INTERSECT, //implementar!
         POINTS, //IMPLEMENTAR!
         SAMPLES, //IMPLEMENTAR!
@@ -63,7 +63,7 @@ namespace INTERPRETE_C__to_HULK
         //variables y operadores G#
         UNDERSCORE, //_ IMPLEMENTAR!
         UNDEFINED, //IMPLEMENTAR!
-        INFINITE, //token que se usa en declaracion de secuencias infinitas como {a...} o {a...b} IMPLEMENTAR!
+        INFINITE, //token que se usa en declaracion de secuencias infinitas como {a...} o {a...b} 
         //REVISAR EL OPERADOR + YA QUE EN G# SE USA PARA CONCATENAR SECUENCIAS Y PROBABLEMENTE STRINGS Y OTROS
         COLOR_RANGE, //colores blue red etc 
 

@@ -26,12 +26,16 @@ namespace INTERPRETE_C__to_HULK
         /// </summary>
         public Dictionary<string, object> Variables;
 
+        //booleano que me dice si una variable esta dentro de una sequencia o no
+        bool is_in_seq;
+
         /// <summary>
         /// Constructor de la clase Parser
         /// </summary>
         public Parser(List<Token> Tokens_Sequency)
         {
             position = 0; //inicializa la posicion a 0
+            is_in_seq = false; //incializa en falso
             TS = Tokens_Sequency; // Almacena la secuencia de Tokens
             Variables = new Dictionary<string, object>(); // Inicializa el diccionario de variables
         }
@@ -70,6 +74,31 @@ namespace INTERPRETE_C__to_HULK
                 return Measure();
             }
 
+            if (position < TS.Count && Convert.ToString(TS[position].Value) == "intersect")
+            {
+                return Intersect();
+            }
+
+            if (position < TS.Count && Convert.ToString(TS[position].Value) == "points")
+            {
+                return Points();
+            }
+
+            if (position < TS.Count && Convert.ToString(TS[position].Value) == "samples")
+            {
+                return Samples();
+            }
+
+            if (position < TS.Count && Convert.ToString(TS[position].Value) == "randoms")
+            {
+                return Randoms();
+            }
+
+            if (position < TS.Count && Convert.ToString(TS[position].Value) == "count")
+            {
+                return Count();
+            }
+
             if (position < TS.Count && Convert.ToString(TS[position].Value) == "let")
             {
                 return Assigment();
@@ -81,7 +110,7 @@ namespace INTERPRETE_C__to_HULK
             }
             if (position < TS.Count && Convert.ToString(TS[position].Value) == "import")
             {
-                return Conditional();
+                return Conditional(); ///
             }
 
             return Layer_6();
@@ -172,6 +201,65 @@ namespace INTERPRETE_C__to_HULK
             return new Node { Type = "measure", Children = new List<Node> { p1, p2 } };
         }
 
+        //Este metodo se encarga de hallar el intercepto entre dos figuras
+        public Node Intersect()
+        {
+            position++;
+
+            Expect(TokenType.L_PHARENTESYS, "(");
+            Node f1 = Factor();
+            Expect(TokenType.COMMA, ",");
+            Node f2 = Factor();
+            Expect(TokenType.R_PHARENTESYS, ")");
+
+            return new Node { Type = "intersect", Children = new List<Node> { f1, f2 } };
+        }
+
+        //este metodo se encarga de hallar una secuencia finita de puntos aleatorios en una figura
+        public Node Points()
+        {
+            position++;
+
+            Expect(TokenType.L_PHARENTESYS, "(");
+            Node f = Factor();
+            Expect(TokenType.R_PHARENTESYS, ")");
+
+            return new Node { Type = "points", Children = new List<Node>() { f } };
+        }
+
+        //Este metodo se necarga de hallar la cantidad de elementos que tiene una sequencia
+        public Node Count()
+        {
+            position++;
+
+            Expect(TokenType.L_PHARENTESYS, "(");
+            Node sec = Factor();
+            Expect(TokenType.R_PHARENTESYS, ")");
+
+            return new Node { Type = "count", Children = new List<Node> { sec } };
+        }
+
+        //este metodo se encarga de hallar la secuencia de flotantes
+        public Node Randoms()
+        {
+            position++;
+
+            Expect(TokenType.L_PHARENTESYS, "(");
+            Expect(TokenType.R_PHARENTESYS, ")");
+
+            return new Node { Type = "randoms", Children = new List<Node>() };
+        }
+
+        //este metodo se encarga de halalr la secuencia de puntos en el plano
+        public Node Samples()
+        {
+            position++;
+
+            Expect(TokenType.L_PHARENTESYS, "(");
+            Expect(TokenType.R_PHARENTESYS, ")");
+
+            return new Node { Type = "samples", Children = new List<Node>() };
+        }
         /// <summary>
         /// Este método se encarga de procesar las estructuras condicionales del lenguaje (IF-ELSE)
         /// </summary>
@@ -382,10 +470,10 @@ namespace INTERPRETE_C__to_HULK
 
             }
 
+            else return null;
 
 
-
-            return null;
+            //return null;
         }
 
         /// <summary>
@@ -414,25 +502,48 @@ namespace INTERPRETE_C__to_HULK
             if (current_token.Type == TokenType.L_KEY)
             {
                 position++;
+                int first_pun = -1;
                 bool comma = false;
+                bool infinite = false;
+                int inf_count = 0;
                 Node node = new Node { Type = "sequence" };
-                do
+                while (TS[position].Type != TokenType.R_KEY)
                 {
-                    if (comma)
+                    //if (comma || infinite) position++;
+                    if (TS[position].Type == TokenType.COMMA)
                     {
+                        if (first_pun == -1) first_pun = position;
+                        if (position == first_pun) comma = true;
+                        else if (infinite) Input_Error(" Invalid sequence declaration");
                         position++;
                     }
-                    comma = true;
+                    if (TS[position].Type == TokenType.INFINITE)
+                    {
+                        inf_count++;
+                        if (inf_count > 1) Input_Error("Invalid sequence declaration");
+                        if (position == first_pun) infinite = true;
+                        if (first_pun == -1)
+                        {
+                            first_pun = position;
+                            infinite = true;
+                        }
+                        else if (comma) Input_Error(" Invalid sequence declaration");
+                        position++;
+                    }
+                    is_in_seq = true;
                     Node children = Global_Layer();
+                    if (!infinite) Exceptions_Missing(children, "sequence");
+                    if (infinite && children.Type == "error" && TS[position].Type == TokenType.R_KEY) break;
                     node.Children.Add(children);
+                }
 
-                } while (TS[position].Type == TokenType.COMMA);
-
-                if (TS[position].Type != TokenType.R_KEY)
+                /*if (TS[position].Type != TokenType.R_KEY)
                 {
                     Input_Error(" '}' Expected!");
-                }
+                }*/
+                if (infinite) node.Type = "inf_sequence";
                 position++;
+                is_in_seq = false;
                 return node;
             }
 
@@ -473,46 +584,134 @@ namespace INTERPRETE_C__to_HULK
                 return new Node { Type = "string", Value = value };
             }
 
-
-            else if (TS[position].Type == TokenType.VARIABLE)
+            //si el token actual es undefined, retorna el nodo de tipo undefined 
+            else if (TS[position].Type == TokenType.UNDEFINED)
             {
-                if (TS[position + 1].Type == TokenType.EQUAL)
+                position++;
+                return new Node { Type = "undefined" };
+            }
+
+            //si el token es una variable o un underscore
+            else if (TS[position].Type == TokenType.VARIABLE || TS[position].Type == TokenType.UNDERSCORE)
+            {
+                //si a la variable le precede una coma, procesar como asignacion de valores de una secuencia
+                if (TS[position + 1].Type == TokenType.COMMA && !is_in_seq)
                 {
-                    position += 2;
-                    return Layer_0();
-                }
-                if (TS[position + 1].Type == TokenType.L_PHARENTESYS) // si el token siguiente es parentesis procesar como funcion 
-                {
-                    dynamic? f_name = Convert.ToString(TS[position++].Value);
-                    position++;
-                    Node name = new Node { Type = "d_function_name", Value = f_name };
-                    Node param = new Node { Type = "parameters" };
-                    if (TS[position].Type != TokenType.R_PHARENTESYS)
+                    //crear nodo hijo con la lista de variables a asignar
+                    Node vars = new Node { Type = "asign_seq_var_name" };
+                    bool comma = true;
+                    do
                     {
-                        do
+                        //si encuentro un underscore, anadir al arbol
+                        if (TS[position].Type == TokenType.UNDERSCORE)
                         {
-                            Node parammeter_name = new Node { Type = "p_name", Value = Layer_6() };
-                            param.Children.Add(parammeter_name);
+                            dynamic? values = Convert.ToString(TS[position++].Value);
+                            Node var = new Node { Type = "underscore", Value = values };
+                            comma = false;
+                            vars.Children.Add(var);
+                        }
+                        //si encuentro una variable, anadir
+                        if (TS[position].Type == TokenType.VARIABLE)
+                        {
+                            dynamic? values = Convert.ToString(TS[position++].Value);
+                            Node var = new Node { Type = "variable", Value = values };
+                            comma = false;
+                            vars.Children.Add(var);
+                        }
+                        //si encuetro una coma y es valido, operar, sino, lanzar error
+                        if (TS[position].Type == TokenType.COMMA)
+                        {
+                            if (comma) Input_Error("Invalid operation in constant asignation");
+                            position++;
+                            comma = true;
+                        }
+                        //si encontre un igual y una coma le precede, error
+                        if (TS[position].Type == TokenType.EQUAL && comma) Input_Error("Invalid operation in constant asignation");
 
-                            if (TS[position].Type == TokenType.COMMA)
-                            {
-                                position++;
-                            }
-                        } while (TS[position - 1].Type == TokenType.COMMA);
+                        //si no encontro ninguna de las anteriores, retornar error
+                        else Input_Error("Invalid constant asignation");
                     }
+                    while (TS[position].Type != TokenType.EQUAL);
+                    position++;
 
-                    Expect(TokenType.R_PHARENTESYS, ")");
-                    if (TS[position].Type == TokenType.EQUAL)
-                    {
-                        Node action = Function();
-                        return new Node { Type = "function", Children = new List<Node> { name, param, action } };
-                    }
-                    return new Node { Type = "declared_function", Children = new List<Node> { name, param } };
-
+                    //crear hijo con lista de valores a asiganr en las variables(secuencias)
+                    Node sequence = new Node { Type = "asign_values_seq" };
+                    Node node = Global_Layer();
+                    sequence.Children.Add(node);
+                    //devolver el nodo con el arbol de las asignaciones para el analisis semantico
+                    return new Node { Type = "sequence_asigment", Children = new List<Node>() { vars, sequence } };
                 }
-                // procesar como variable
-                dynamic? value = Convert.ToString(TS[position++].Value);
-                return new Node { Type = "variable", Value = value };
+
+                //acciones que solo son validas si el token es una variable
+                if (TS[position].Type == TokenType.VARIABLE)
+                {
+                    //si a la variable le precede un igual, es de asignacion global
+                    if (TS[position + 1].Type == TokenType.EQUAL)
+                    {
+                        /*Node node;
+                        position += 2;
+                        if (TS[position].Type == TokenType.L_KEY) node = Factor();
+                        else node = Layer_0();
+                        return node;*/
+
+                        //este sistema vendria siendo parecido al del let in, con la unica diferencia de que cuardo exclusivamente una variable
+                        Node name = new Node { Type = "name", Value = TS[position].Value };
+                        position += 2;
+                        switch (TS[position].Type) //si lo que viene despues del igual son los metodos de Layer_0, llamar
+                        {
+                            case TokenType.LINE:
+                            case TokenType.SEGMENT:
+                            case TokenType.RAY:
+                            case TokenType.ARC:
+                            case TokenType.CIRCLE:
+                            case TokenType.MEASURE:
+                                return Layer_0();
+                            default: //si no, es un valor de variable cualquiera y lo guarda en un nodo
+                                Node var_value = Global_Layer();
+                                return new Node { Type = "global_var_asigment", Children = new List<Node> { name, var_value } };
+                        }
+                    }
+                    // si el token siguiente es parentesis procesar como funcion
+                    if (TS[position + 1].Type == TokenType.L_PHARENTESYS)
+                    {
+                        dynamic? f_name = Convert.ToString(TS[position++].Value);
+                        position++;
+                        Node name = new Node { Type = "d_function_name", Value = f_name };
+                        Node param = new Node { Type = "parameters" };
+                        if (TS[position].Type != TokenType.R_PHARENTESYS)
+                        {
+                            do
+                            {
+                                Node parammeter_name = new Node { Type = "p_name", Value = Layer_6() };
+                                param.Children.Add(parammeter_name);
+
+                                if (TS[position].Type == TokenType.COMMA)
+                                {
+                                    position++;
+                                }
+                            } while (TS[position - 1].Type == TokenType.COMMA);
+                        }
+
+                        Expect(TokenType.R_PHARENTESYS, ")");
+                        if (TS[position].Type == TokenType.EQUAL)
+                        {
+                            Node action = Function();
+                            return new Node { Type = "function", Children = new List<Node> { name, param, action } };
+                        }
+                        return new Node { Type = "declared_function", Children = new List<Node> { name, param } };
+
+                    }
+                    // procesar como variable
+                    dynamic? value = Convert.ToString(TS[position++].Value);
+                    return new Node { Type = "variable", Value = value };
+                }
+                //si es un underscore, no es valido el resto de operaciones
+                else
+                {
+                    Input_Error("You're not using the underscore properly");
+                    return null; //no pasa nada porque siempre va a lanzar excepcion antes
+                }
+
             }
 
             // Si el token actual es "cos", procesa una función coseno
