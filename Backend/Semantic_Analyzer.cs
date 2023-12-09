@@ -427,16 +427,35 @@ namespace INTERPRETE_C__to_HULK
                 //? Expressions
                 // Si el nodo es un "draw" lo agrega a la lista de objetos dibujables
                 case "draw":
+                    var figures = Evaluate(node.Children[0]);
 
-                    IDrawable fig = (IDrawable)Evaluate(node.Children[0]);
+                    (bool is_s, int kind_s) = IsSequence(figures);
 
-                    if (node.Children[1].Type != "empty")
+                    //si es una secuencia
+                    if (is_s)
                     {
-                        fig.Msg = Evaluate(node.Children[1]).ToString();
+                        if (kind_s == 1) Draw_Sequence((PointSequence)figures);
+                        if (kind_s == 2) Draw_Sequence((LineSequence)figures);
+                        if (kind_s == 3) Draw_Sequence((SegmentSequence)figures);
+                        if (kind_s == 4) Draw_Sequence((RaySequence)figures);
+                        if (kind_s == 5) Draw_Sequence((ArcSequence)figures);
+                        if (kind_s == 6) Draw_Sequence((CircleSequence)figures);
                     }
+                    //si es solo una figura
+                    else
+                    {
+                        IDrawable fig = (IDrawable)figures;
 
-                    Drawables.Add(fig);
+                        if (node.Children[1].Type != "empty")
+                        {
+                            fig.Msg = Evaluate(node.Children[1]).ToString();
+                        }
+
+                        Drawables.Add(fig);
+                        break;
+                    }
                     break;
+
                 case "measure":
                     string m_name = Evaluate(node.Children[0]).ToString();
                     Point p1 = (Point)Evaluate(node.Children[1]);
@@ -1116,6 +1135,25 @@ namespace INTERPRETE_C__to_HULK
             if (objectt is IntSequence) return (true, 8);
             if (objectt is FloatSequence) return (true, 9);
             return (false, 0);
+        }
+
+        private void Draw_Sequence<T>(ISequence<T> s)
+        {
+            //no admite secuecnias i fiitas o indefinidas
+            if (s.is_infinite || s.is_undefined) Input_Error("Infinie or undefined sequences can't be drawed");
+
+            else
+            {
+                foreach (var c in s.values)
+                {
+                    foreach (var v in c)
+                    {
+                        //dibujar secuencias no admiten texto de entrada 
+                        IDrawable fig = (IDrawable)v;
+                        Drawables.Add(fig);
+                    }
+                }
+            }
         }
 
         /// <summary>

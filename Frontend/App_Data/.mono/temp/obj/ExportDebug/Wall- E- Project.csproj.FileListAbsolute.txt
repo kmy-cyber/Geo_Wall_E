@@ -1,9 +1,0 @@
-C:\Laura\Proyectos\Wall-E-Project\.mono\temp\bin\ExportDebug\Wall- E- Project.dll
-C:\Laura\Proyectos\Wall-E-Project\.mono\temp\bin\ExportDebug\Wall- E- Project.pdb
-C:\Laura\Proyectos\Wall-E-Project\.mono\temp\obj\ExportDebug\Wall- E- Project.csproj.AssemblyReference.cache
-C:\Laura\Proyectos\Wall-E-Project\.mono\temp\obj\ExportDebug\Wall- E- Project.GeneratedMSBuildEditorConfig.editorconfig
-C:\Laura\Proyectos\Wall-E-Project\.mono\temp\obj\ExportDebug\Wall- E- Project.AssemblyInfoInputs.cache
-C:\Laura\Proyectos\Wall-E-Project\.mono\temp\obj\ExportDebug\Wall- E- Project.AssemblyInfo.cs
-C:\Laura\Proyectos\Wall-E-Project\.mono\temp\obj\ExportDebug\Wall- E- Project.csproj.CoreCompileInputs.cache
-C:\Laura\Proyectos\Wall-E-Project\.mono\temp\obj\ExportDebug\Wall- E- Project.dll
-C:\Laura\Proyectos\Wall-E-Project\.mono\temp\obj\ExportDebug\Wall- E- Project.pdb

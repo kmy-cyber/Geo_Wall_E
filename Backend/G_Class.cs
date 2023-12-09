@@ -2,7 +2,9 @@ using System;
 using System.Globalization;
 using System.Numerics;
 using System.Text.Json.Serialization;
-using Microsoft.VisualBasic.CompilerServices;
+using Microsoft.VisualBasic.CompilerServices; 
+using System.Collections.Generic;
+
 namespace G_Wall_E
 {
     public interface IFigure
