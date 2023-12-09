@@ -1,5 +1,9 @@
 using INTERPRETE_C__to_HULK;
 using G_Wall_E;
+using System.Numerics;
+using System.Collections.Generic;
+using System.Linq;
+using System;
 
 namespace G_Wall_E
 {
@@ -157,7 +161,7 @@ namespace G_Wall_E
             //itero por las variables
             foreach (Node child in node.Children)
             {
-                if (child.Value.ToString() == "_") 
+                if (child.Value.ToString() == "_")
                 {
                     if (j < values[i].Count || is_undefined_concat.Contains(i)) j++;
                     continue;
@@ -166,10 +170,50 @@ namespace G_Wall_E
                 string name = child.Value.ToString();
                 //su valor en la sequencia
                 dynamic var_value;
+
                 if (is_undefined || j == values[i].Count) var_value = "undefined";
+
+                //si no alcanzo secuencia para el valor de la variable asignarle una secuencia vacua
+                else if (node.Children.Last() == child && i > values.Count() - 1)
+                {
+                    var_value = new PointSequence(false);
+                    continue;
+                }
+
+                //si el ultimo valor termina siendo una sequencia
+                else if (node.Children.Last() == child && (j != values[i].Count - 1 || i != values.Count() - 1))
+                {
+                    //creo la sequencia
+                    var golbal_sequence = new List<List<Point>>();
+                    PointSequence s = new PointSequence(golbal_sequence);
+                    int index = 0;
+
+                    //ir introduciendolos valores
+                    while (i < values.Count())
+                    {
+                        var sequence = new List<Point>();
+                        for (int k = j; k < values[i].Count(); k++)
+                        {
+                            sequence.Add(values[i][k]);
+                        }
+                        golbal_sequence.Add(sequence);
+                        //si la secuencia actual esta concatenada con undefined, concatenar esta tambien
+                        if (is_undefined_concat.Contains(i))
+                        {
+                            s.is_undefined_concat.Add(index);
+                        }
+                        i++;
+                        index++;
+                    }
+
+                    //darle el valor de la sequencia
+                    var_value = s;
+                }
+
                 else var_value = values[i][j];
                 //lo anado al nodo de familia de variables
                 var_fam.Children.Add(new Node { Type = name, Value = var_value });
+
                 if (j == values[i].Count)
                 {
                     j = 0;
@@ -296,7 +340,7 @@ namespace G_Wall_E
             //itero por las variables
             foreach (Node child in node.Children)
             {
-                if (child.Value.ToString() == "_") 
+                if (child.Value.ToString() == "_")
                 {
                     if (j < values[i].Count || is_undefined_concat.Contains(i)) j++;
                     continue;
@@ -305,16 +349,56 @@ namespace G_Wall_E
                 string name = child.Value.ToString();
                 //su valor en la sequencia
                 dynamic var_value;
+
                 if (is_undefined || j == values[i].Count) var_value = "undefined";
+
+                //si no alcanzo secuencia para el valor de la variable asignarle una secuencia vacua
+                else if (node.Children.Last() == child && i > values.Count() - 1)
+                {
+                    var_value = new LineSequence(false);
+                    continue;
+                }
+
+                //si el ultimo valor termina siendo una sequencia
+                else if (node.Children.Last() == child && (j != values[i].Count - 1 || i != values.Count() - 1))
+                {
+                    //creo la sequencia
+                    var golbal_sequence = new List<List<Line>>();
+                    LineSequence s = new LineSequence(golbal_sequence);
+                    int index = 0;
+
+                    //ir introduciendolos valores
+                    while (i < values.Count())
+                    {
+                        var sequence = new List<Line>();
+                        for (int k = j; k < values[i].Count(); k++)
+                        {
+                            sequence.Add(values[i][k]);
+                        }
+                        golbal_sequence.Add(sequence);
+                        //si la secuencia actual esta concatenada con undefined, concatenar esta tambien
+                        if (is_undefined_concat.Contains(i))
+                        {
+                            s.is_undefined_concat.Add(index);
+                        }
+                        i++;
+                        index++;
+                    }
+
+                    //darle el valor de la sequencia
+                    var_value = s;
+                }
+
                 else var_value = values[i][j];
                 //lo anado al nodo de familia de variables
                 var_fam.Children.Add(new Node { Type = name, Value = var_value });
+
                 if (j == values[i].Count)
                 {
                     j = 0;
                     i++;
                 }
-                if (j < values[i].Count || is_undefined_concat.Contains(i)) j++;
+                else if (j < values[i].Count || is_undefined_concat.Contains(i)) j++;
                 else
                 {
                     j = 0;
@@ -436,7 +520,7 @@ namespace G_Wall_E
             //itero por las variables
             foreach (Node child in node.Children)
             {
-                if (child.Value.ToString() == "_") 
+                if (child.Value.ToString() == "_")
                 {
                     if (j < values[i].Count || is_undefined_concat.Contains(i)) j++;
                     continue;
@@ -446,6 +530,43 @@ namespace G_Wall_E
                 //su valor en la sequencia
                 dynamic var_value;
                 if (is_undefined || j == values[i].Count) var_value = "undefined";
+
+                else if (node.Children.Last() == child && i > values.Count() - 1)
+                {
+                    var_value = new IntSequence(false);
+                    continue;
+                }
+
+                //si el ultimo valor termina siendo una sequencia
+                else if (node.Children.Last() == child && (j != values[i].Count - 1 || i != values.Count() - 1))
+                {
+                    //creo la sequencia
+                    var golbal_sequence = new List<List<Segment>>();
+                    SegmentSequence s = new SegmentSequence(golbal_sequence);
+                    int index = 0;
+
+                    //ir introduciendolos valores
+                    while (i < values.Count())
+                    {
+                        var sequence = new List<Segment>();
+                        for (int k = j; k < values[i].Count(); k++)
+                        {
+                            sequence.Add(values[i][k]);
+                        }
+                        golbal_sequence.Add(sequence);
+                        //si la secuencia actual esta concatenada con undefined, concatenar esta tambien
+                        if (is_undefined_concat.Contains(i))
+                        {
+                            s.is_undefined_concat.Add(index);
+                        }
+                        i++;
+                        index++;
+                    }
+
+                    //darle el valor de la sequencia
+                    var_value = s;
+                }
+
                 else var_value = values[i][j];
                 //lo anado al nodo de familia de variables
                 var_fam.Children.Add(new Node { Type = name, Value = var_value });
@@ -576,7 +697,7 @@ namespace G_Wall_E
             //itero por las variables
             foreach (Node child in node.Children)
             {
-                if (child.Value.ToString() == "_") 
+                if (child.Value.ToString() == "_")
                 {
                     if (j < values[i].Count || is_undefined_concat.Contains(i)) j++;
                     continue;
@@ -586,6 +707,43 @@ namespace G_Wall_E
                 //su valor en la sequencia
                 dynamic var_value;
                 if (is_undefined || j == values[i].Count) var_value = "undefined";
+
+                else if (node.Children.Last() == child && i > values.Count() - 1)
+                {
+                    var_value = new IntSequence(false);
+                    continue;
+                }
+
+                //si el ultimo valor termina siendo una sequencia
+                else if (node.Children.Last() == child && (j != values[i].Count - 1 || i != values.Count() - 1))
+                {
+                    //creo la sequencia
+                    var golbal_sequence = new List<List<Ray>>();
+                    RaySequence s = new RaySequence(golbal_sequence);
+                    int index = 0;
+
+                    //ir introduciendolos valores
+                    while (i < values.Count())
+                    {
+                        var sequence = new List<Ray>();
+                        for (int k = j; k < values[i].Count(); k++)
+                        {
+                            sequence.Add(values[i][k]);
+                        }
+                        golbal_sequence.Add(sequence);
+                        //si la secuencia actual esta concatenada con undefined, concatenar esta tambien
+                        if (is_undefined_concat.Contains(i))
+                        {
+                            s.is_undefined_concat.Add(index);
+                        }
+                        i++;
+                        index++;
+                    }
+
+                    //darle el valor de la sequencia
+                    var_value = s;
+                }
+
                 else var_value = values[i][j];
                 //lo anado al nodo de familia de variables
                 var_fam.Children.Add(new Node { Type = name, Value = var_value });
@@ -715,7 +873,7 @@ namespace G_Wall_E
             //itero por las variables
             foreach (Node child in node.Children)
             {
-                if (child.Value.ToString() == "_") 
+                if (child.Value.ToString() == "_")
                 {
                     if (j < values[i].Count || is_undefined_concat.Contains(i)) j++;
                     continue;
@@ -725,6 +883,43 @@ namespace G_Wall_E
                 //su valor en la sequencia
                 dynamic var_value;
                 if (is_undefined || j == values[i].Count) var_value = "undefined";
+
+                else if (node.Children.Last() == child && i > values.Count() - 1)
+                {
+                    var_value = new IntSequence(false);
+                    continue;
+                }
+
+                //si el ultimo valor termina siendo una sequencia
+                else if (node.Children.Last() == child && (j != values[i].Count - 1 || i != values.Count() - 1))
+                {
+                    //creo la sequencia
+                    var golbal_sequence = new List<List<Circle>>();
+                    CircleSequence s = new CircleSequence(golbal_sequence);
+                    int index = 0;
+
+                    //ir introduciendolos valores
+                    while (i < values.Count())
+                    {
+                        var sequence = new List<Circle>();
+                        for (int k = j; k < values[i].Count(); k++)
+                        {
+                            sequence.Add(values[i][k]);
+                        }
+                        golbal_sequence.Add(sequence);
+                        //si la secuencia actual esta concatenada con undefined, concatenar esta tambien
+                        if (is_undefined_concat.Contains(i))
+                        {
+                            s.is_undefined_concat.Add(index);
+                        }
+                        i++;
+                        index++;
+                    }
+
+                    //darle el valor de la sequencia
+                    var_value = s;
+                }
+
                 else var_value = values[i][j];
                 //lo anado al nodo de familia de variables
                 var_fam.Children.Add(new Node { Type = name, Value = var_value });
@@ -855,7 +1050,7 @@ namespace G_Wall_E
             //itero por las variables
             foreach (Node child in node.Children)
             {
-                if (child.Value.ToString() == "_") 
+                if (child.Value.ToString() == "_")
                 {
                     if (j < values[i].Count || is_undefined_concat.Contains(i)) j++;
                     continue;
@@ -865,6 +1060,43 @@ namespace G_Wall_E
                 //su valor en la sequencia
                 dynamic var_value;
                 if (is_undefined || j == values[i].Count) var_value = "undefined";
+
+                else if (node.Children.Last() == child && i > values.Count() - 1)
+                {
+                    var_value = new IntSequence(false);
+                    continue;
+                }
+
+                //si el ultimo valor termina siendo una sequencia
+                else if (node.Children.Last() == child && (j != values[i].Count - 1 || i != values.Count() - 1))
+                {
+                    //creo la sequencia
+                    var golbal_sequence = new List<List<Arc>>();
+                    ArcSequence s = new ArcSequence(golbal_sequence);
+                    int index = 0;
+
+                    //ir introduciendolos valores
+                    while (i < values.Count())
+                    {
+                        var sequence = new List<Arc>();
+                        for (int k = j; k < values[i].Count(); k++)
+                        {
+                            sequence.Add(values[i][k]);
+                        }
+                        golbal_sequence.Add(sequence);
+                        //si la secuencia actual esta concatenada con undefined, concatenar esta tambien
+                        if (is_undefined_concat.Contains(i))
+                        {
+                            s.is_undefined_concat.Add(index);
+                        }
+                        i++;
+                        index++;
+                    }
+
+                    //darle el valor de la sequencia
+                    var_value = s;
+                }
+
                 else var_value = values[i][j];
                 //lo anado al nodo de familia de variables
                 var_fam.Children.Add(new Node { Type = name, Value = var_value });
@@ -975,7 +1207,7 @@ namespace G_Wall_E
             //itero por las variables
             foreach (Node child in node.Children)
             {
-                if (child.Value.ToString() == "_") 
+                if (child.Value.ToString() == "_")
                 {
                     if (j < values[i].Count || is_undefined_concat.Contains(i)) j++;
                     continue;
@@ -985,6 +1217,43 @@ namespace G_Wall_E
                 //su valor en la sequencia
                 dynamic var_value;
                 if (is_undefined || j == values[i].Count) var_value = "undefined";
+
+                else if (node.Children.Last() == child && i > values.Count() - 1)
+                {
+                    var_value = new IntSequence(false);
+                    continue;
+                }
+
+                //si el ultimo valor termina siendo una sequencia
+                else if (node.Children.Last() == child && (j != values[i].Count - 1 || i != values.Count() - 1))
+                {
+                    //creo la sequencia
+                    var golbal_sequence = new List<List<string>>();
+                    StringSequence s = new StringSequence(golbal_sequence);
+                    int index = 0;
+
+                    //ir introduciendolos valores
+                    while (i < values.Count())
+                    {
+                        var sequence = new List<string>();
+                        for (int k = j; k < values[i].Count(); k++)
+                        {
+                            sequence.Add(values[i][k]);
+                        }
+                        golbal_sequence.Add(sequence);
+                        //si la secuencia actual esta concatenada con undefined, concatenar esta tambien
+                        if (is_undefined_concat.Contains(i))
+                        {
+                            s.is_undefined_concat.Add(index);
+                        }
+                        i++;
+                        index++;
+                    }
+
+                    //darle el valor de la sequencia
+                    var_value = s;
+                }
+
                 else var_value = values[i][j];
                 //lo anado al nodo de familia de variables
                 var_fam.Children.Add(new Node { Type = name, Value = var_value });
@@ -1139,18 +1408,69 @@ namespace G_Wall_E
                 {
                     if (j < values[i].Count || is_undefined_concat.Contains(i)) j++;
                     continue;
-                } 
+                }
                 //su nombre
                 string name = child.Value.ToString();
                 //su valor en la sequencia
-                dynamic var_value;
+                dynamic var_value = null;
+
                 if (is_undefined || j == values[i].Count) var_value = "undefined";
 
-                //si la secuencia es infinita y es el ultimo hijo
-                if(node.Children.Last() == child && is_infinite)
+                else if (node.Children.Last() == child && i > values.Count() - 1)
                 {
-                    int index = values.Count-1;
-                    var_value = new IntSequence(values[index][0]); //la secuencia infinita siempre la va a tener en el ultimo lugar, con el valor en el primero
+                    var_value = new IntSequence(false);
+                    continue;
+                }
+
+                //si el ultimo valor termina siendo una sequencia
+                else if (node.Children.Last() == child && (j != values[i].Count - 1 || i != values.Count() - 1))
+                {
+                    //creo la sequencia
+                    var golbal_sequence = new List<List<double>>();
+                    IntSequence s = new IntSequence(golbal_sequence);
+                    int index = 0;
+
+                    //ir introduciendolos valores
+                    while (i < values.Count())
+                    {
+                        var sequence = new List<double>();
+
+                        //si la scuencia actual es infinita, guarda esa secuencia y para
+                        if (is_infinite && i == values.Count() - 1)
+                        {
+                            index = values.Count() - 1;
+                            golbal_sequence.Add(values[index]);
+                            s.is_infinite = true;
+                            break;
+                        }
+
+                        for (int k = j; k < values[i].Count(); k++)
+                        {
+                            sequence.Add(values[i][k]);
+                        }
+
+                        golbal_sequence.Add(sequence);
+                        //si la secuencia actual esta concatenada con undefined, concatenar esta tambien
+                        if (is_undefined_concat.Contains(i))
+                        {
+                            s.is_undefined_concat.Add(index);
+                        }
+
+                        i++;
+                        index++;
+                    }
+
+                    //darle el valor de la sequencia
+                    var_value = s;
+                }
+
+                //si la secuencia es infinita y es el ultimo hijo
+                else if (node.Children.Last() == child && is_infinite && var_value is null)
+                {
+                    int index = values.Count - 1;
+                    var s = new IntSequence(values[index][0]); //la secuencia infinita siempre la va a tener en el ultimo lugar, con el valor en el primero
+                    s.is_infinite = true;
+                    var_value = s;
                 }
 
                 else var_value = values[i][j];
@@ -1164,7 +1484,7 @@ namespace G_Wall_E
                 }
 
                 //si ya llegue al final de la secuencia y la secuencia debe ser infinita, agrandar la secuencia y seguir
-                if (i == values.Count - 1 && j == values[i].Count-1 && is_infinite)
+                if (i == values.Count - 1 && j == values[i].Count - 1 && is_infinite)
                 {
                     GrowSequence();
                     j++;
@@ -1287,7 +1607,7 @@ namespace G_Wall_E
             //itero por las variables
             foreach (Node child in node.Children)
             {
-                if (child.Value.ToString() == "_") 
+                if (child.Value.ToString() == "_")
                 {
                     if (j < values[i].Count || is_undefined_concat.Contains(i)) j++;
                     continue;
@@ -1297,6 +1617,43 @@ namespace G_Wall_E
                 //su valor en la sequencia
                 dynamic var_value;
                 if (is_undefined || j == values[i].Count) var_value = "undefined";
+
+                else if (node.Children.Last() == child && i > values.Count() - 1)
+                {
+                    var_value = new IntSequence(false);
+                    continue;
+                }
+
+                //si el ultimo valor termina siendo una sequencia
+                else if (node.Children.Last() == child && (j != values[i].Count - 1 || i != values.Count() - 1))
+                {
+                    //creo la sequencia
+                    var golbal_sequence = new List<List<float>>();
+                    FloatSequence s = new FloatSequence(golbal_sequence);
+                    int index = 0;
+
+                    //ir introduciendolos valores
+                    while (i < values.Count())
+                    {
+                        var sequence = new List<float>();
+                        for (int k = j; k < values[i].Count(); k++)
+                        {
+                            sequence.Add(values[i][k]);
+                        }
+                        golbal_sequence.Add(sequence);
+                        //si la secuencia actual esta concatenada con undefined, concatenar esta tambien
+                        if (is_undefined_concat.Contains(i))
+                        {
+                            s.is_undefined_concat.Add(index);
+                        }
+                        i++;
+                        index++;
+                    }
+
+                    //darle el valor de la sequencia
+                    var_value = s;
+                }
+
                 else var_value = values[i][j];
                 //lo anado al nodo de familia de variables
                 var_fam.Children.Add(new Node { Type = name, Value = var_value });

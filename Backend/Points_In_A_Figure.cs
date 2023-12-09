@@ -1,5 +1,7 @@
 using INTERPRETE_C__to_HULK;
 using G_Wall_E;
+using System;
+using System.Collections.Generic;
 
 namespace G_Wall_E
 {

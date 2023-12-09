@@ -611,7 +611,7 @@ namespace INTERPRETE_C__to_HULK
                             vars.Children.Add(var);
                         }
                         //si encuentro una variable, anadir
-                        if (TS[position].Type == TokenType.VARIABLE)
+                        else if (TS[position].Type == TokenType.VARIABLE)
                         {
                             dynamic? values = Convert.ToString(TS[position++].Value);
                             Node var = new Node { Type = "variable", Value = values };
@@ -626,8 +626,10 @@ namespace INTERPRETE_C__to_HULK
                             comma = true;
                         }
                         //si encontre un igual y una coma le precede, error
-                        if (TS[position].Type == TokenType.EQUAL && comma) Input_Error("Invalid operation in constant asignation");
-
+                        else if (TS[position].Type == TokenType.EQUAL)
+                        {
+                            if(comma) Input_Error("Invalid operation in constant asignation");
+                        } 
                         //si no encontro ninguna de las anteriores, retornar error
                         else Input_Error("Invalid constant asignation");
                     }

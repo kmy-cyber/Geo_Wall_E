@@ -1,6 +1,8 @@
 using System.Globalization;
 using System.IO;
 using INTERPRETE_C__to_HULK;
+using System;
+using System.Collections.Generic;
 
 namespace INTERPRETE_C_to_HULK
 {
